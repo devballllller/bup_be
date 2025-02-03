@@ -5,7 +5,7 @@ const rateLimit = require('express-rate-limit');
 
 const KEY_FILE_PATH = path.join(__dirname, 'subtle-lambda-438005-m6-9c5ab8ef5764.json');
 const SPREADSHEET_ID = '12IdVLhUNYU57tEZ6kE-DVtrZyhcAmlReG73pRUDI-WY';
-const RANGE = '2024!B9:AG1000';
+const RANGE = '2024!B5:AG1000';
 
 const sheets = google.sheets('v4');
 
