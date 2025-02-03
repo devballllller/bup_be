@@ -28,7 +28,8 @@ async function getSheetData() {
 
 async function findValuesByName(name) {
   const data = await getSheetData();
-  const rows = data.filter((row) => row[2]?.toLowerCase() === name.toLowerCase());
+  console.log(data[1]);
+  const rows = data.filter((row) => row[1]?.toLowerCase() === name.toLowerCase());
   return rows.length > 0 ? rows[0] : null;
 }
 
@@ -71,20 +72,20 @@ app.post('/api/find-value', limiter, async (req, res) => {
         data: {
           EmployeeId: rows[0],
           EmployeeName: rows[1],
-          position: rows[5],
-          jan: rows[17],
-          feb: rows[18],
-          mar: rows[19],
-          apr: rows[20],
-          may: rows[21],
-          jun: rows[22],
-          jul: rows[23],
-          aug: rows[24],
-          sep: rows[25],
-          oct: rows[26],
-          nov: rows[27],
-          dec: rows[28],
-          restUse: rows[29],
+          // position: rows[5],
+          jan: rows[16],
+          feb: rows[17],
+          mar: rows[18],
+          apr: rows[19],
+          may: rows[20],
+          jun: rows[21],
+          jul: rows[22],
+          aug: rows[23],
+          sep: rows[24],
+          oct: rows[25],
+          nov: rows[26],
+          dec: rows[27],
+          restUse: rows[28],
           restNotUse: rows[30],
         },
         status: 200,
