@@ -8,9 +8,9 @@ async function findEmployeeRestService(name) {
 }
 
 // Tìm dữ liệu theo tên trong bảng Salary
-async function findEmployeeSalaryService(phone, password) {
+async function findEmployeeSalaryService(phone) {
   const allEmployee = await allUserSalary();
-  const data = allEmployee.filter((row) => row[2] == phone && row[4] == password);
+  const data = allEmployee.filter((row) => row[2] == phone);
   return data;
 }
 
