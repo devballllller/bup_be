@@ -1,6 +1,6 @@
-const { findValuesByName, findValuesByNameSalary } = require('../services/sheetService');
+const { findEmployeeRestService, findEmployeeSalaryService } = require('../services/employee');
 
-async function findEmployeeData(req, res) {
+async function findEmployeeRestController(req, res) {
   const { name } = req.body;
 
   if (!name) {
@@ -8,7 +8,7 @@ async function findEmployeeData(req, res) {
   }
 
   try {
-    const rows = await findValuesByName(name);
+    const rows = await findEmployeeRestService(name);
 
     if (rows.length > 0) {
       const employee = rows[0];
@@ -43,17 +43,17 @@ async function findEmployeeData(req, res) {
   }
 }
 
-async function findEmployeeDataSalary(req, res) {
-  const { name } = req.body;
+async function findEmployeeSalaryController(req, res) {
+  const { phone } = req.body;
 
-  if (!name) {
+  if (!phone) {
     return res.status(400).json({ error: 'Tên không được phép rỗng.' });
   }
 
   try {
-    const rows = await findValuesByNameSalary(name);
-    console.log(rows);
-    if (rows.length > 0) {
+    const rows = await findEmployeeSalaryService(phone);
+
+    if (rows?.length > 0) {
       const employee = rows[0];
 
       res.status(200).json({
@@ -74,4 +74,4 @@ async function findEmployeeDataSalary(req, res) {
   }
 }
 
-module.exports = { findEmployeeData, findEmployeeDataSalary };
+module.exports = { findEmployeeRestController, findEmployeeSalaryController };
