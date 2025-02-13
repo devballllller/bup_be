@@ -1,5 +1,5 @@
 const { allRequest, sendRequest } = require('./configService');
-const { generateCode } = require('../constants');
+const { generateCode, getCurrentTime } = require('../constants');
 
 // Tìm dữ liệu theo tên trong bảng Salary
 async function getSendAllRequestService() {
@@ -13,12 +13,12 @@ async function getSendRequestService(employeeId) {
   return data;
 }
 
-async function PostSendRequestService(name, employeeId) {
+async function PostSendRequestService(name, employeeId, TypeRequest, Request, Image) {
   return new Promise(async (resolve, reject) => {
     try {
       const uuid = generateCode();
-      console.log(uuid);
-      const user = [uuid, employeeId, employeeId, employeeId, employeeId];
+      const timestamp = getCurrentTime();
+      const user = [uuid, TypeRequest, employeeId, Request, Image, 'FALSE', timestamp];
 
       await sendRequest(user);
 

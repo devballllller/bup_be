@@ -39,7 +39,7 @@ async function getSendRequestController(req, res) {
     console.log(rows, '12');
 
     res.status(200).json({
-      data: { mes: 'ok' },
+      data: { rows },
       status: 200,
     });
   } catch (error) {
@@ -49,7 +49,7 @@ async function getSendRequestController(req, res) {
 }
 
 async function postSendRequestController(req, res) {
-  const { name, employeeId } = req.body;
+  const { name, employeeId, TypeRequest, Request, Image } = req.body;
 
   console.log(name, employeeId);
   if (!name || !employeeId) {
@@ -57,7 +57,7 @@ async function postSendRequestController(req, res) {
   }
 
   try {
-    const rows = await PostSendRequestService(name, employeeId);
+    const rows = await PostSendRequestService(name, employeeId, TypeRequest, Request, Image);
 
     if (rows.status == 201) {
       await getSendEmailController({
