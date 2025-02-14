@@ -15,28 +15,52 @@ async function getSheetData(sheetKey) {
 
     if (!res.data || !res.data.values) {
       console.warn(`No data found for ${sheetKey}`);
-      return []; // Tránh lỗi khi truy cập `.values`
+      return [];
     }
 
     return res.data.values;
   } catch (error) {
     console.error(`Error fetching data for ${sheetKey}:`, error);
-    return []; // Trả về mảng rỗng để tránh crash
+    return [];
   }
 }
 
-// Hàm ghi dữ liệu vào Google Sheets
 async function appendData(sheetKey, values, range) {
   try {
-    // Kiểm tra sheetKey hợp lệ
     if (!SHEETS_CONFIG[sheetKey]) {
       throw new Error(`Invalid sheet key: ${sheetKey}`);
     }
 
-    // Đảm bảo values luôn là mảng 2D
     const formattedValues = Array.isArray(values[0]) ? values : [values];
 
-    console.log(SHEETS_CONFIG[sheetKey].id, formattedValues, range);
+    const auth = await getAuthClient();
+    const res = await sheets.spreadsheets.values.append({
+      auth,
+      spreadsheetId: SHEETS_CONFIG[sheetKey].id,
+      range: SHEETS_CONFIG[sheetKey].range,
+      valueInputOption: 'RAW',
+      resource: { values: formattedValues },
+    });
+
+    if (!res.data) {
+      console.warn(`No data found for ${sheetKey}`);
+      return [];
+    }
+
+    return res.data;
+  } catch (error) {
+    console.error(`Error appending data for ${sheetKey}:`, error.message);
+    return [];
+  }
+}
+
+async function updateData(sheetKey, values, range) {
+  try {
+    if (!SHEETS_CONFIG[sheetKey]) {
+      throw new Error(`Invalid sheet key: ${sheetKey}`);
+    }
+
+    const formattedValues = Array.isArray(values[0]) ? values : [values];
 
     const auth = await getAuthClient();
     const res = await sheets.spreadsheets.values.update({
@@ -59,39 +83,41 @@ async function appendData(sheetKey, values, range) {
   }
 }
 
-// Tất cả dữ liệu theo tên trong bảng Rest
 async function allUserRest() {
   return await getSheetData('REST');
 }
 
-// Tất cả dữ liệu theo tên trong bảng Salary
 async function allUserSalary() {
   return await getSheetData('SALARY');
 }
 
-// Tất cả dữ liệu theo tên trong bảng Chấm công
+// ----------------REQUEST CÓ ĐẦY ĐỦ TỪ DÒNG TỚI GIÁ TRỊ
+
 async function allRequest() {
   return await getSheetData('REQUEST');
 }
 
-// Tất cả dữ liệu theo tên trong bảng Chấm công
 async function sendRequest(data) {
   return await appendData('REQUEST', data);
 }
 
-// Tất cả dữ liệu theo tên trong bảng Chấm công
-async function insertAccpetRequest(values, range) {
-  return await appendData('REQUEST', values, range);
+// ----------------REQUEST CHỈ INSERT KHÔNG CÓ DÒNG ĐẦU
+
+async function allSendRequest() {
+  return await getSheetData('REQUEST_INSERT');
 }
 
-// Tất cả dữ liệu theo tên trong bảng Chấm công
+async function insertAccpetRequest(values, range) {
+  return await updateData('REQUEST_INSERT', values, range);
+}
+
+// ----------------TEST
 async function allRequestAccept() {
   return await getSheetData('ACCEPT_REQUEST');
 }
 
-// Tất cả dữ liệu theo tên trong bảng Chấm công
 async function appendRestTEST(values, range) {
   return await appendData('ACCEPT_REQUEST', values, range);
 }
 
-module.exports = { getSheetData, allUserRest, allUserSalary, allRequest, sendRequest, allRequestAccept, appendRestTEST, insertAccpetRequest };
+module.exports = { getSheetData, allUserRest, allUserSalary, allRequest, sendRequest, allRequestAccept, appendRestTEST, insertAccpetRequest, updateData, allSendRequest };

@@ -1,4 +1,4 @@
-const { allRequest, sendRequest, appendRestTEST, insertAccpetRequest } = require('./configService');
+const { allRequest, sendRequest, insertAccpetRequest, allSendRequest } = require('./configService');
 const { generateCode, getCurrentTime } = require('../constants');
 
 // Tìm dữ liệu theo tên trong bảng Salary
@@ -36,8 +36,8 @@ async function InsertServices(requestId, values, field) {
   console.log(requestId, values, field);
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(requestId);
-      const data = await allRequest();
+      const data = await allSendRequest();
+      console.log(data, 'data');
       let rowIndex = data.findIndex((row) => row[0] == requestId);
 
       if (rowIndex === -1) {
@@ -47,15 +47,13 @@ async function InsertServices(requestId, values, field) {
 
       let columnIndex = data[0].indexOf(process.env.FIELD_ACCEPT_REQUEST);
 
-      console.log(data[0]);
-
       if (columnIndex === -1) {
         console.log(`Không tìm thấy cột ${field} trong Google Sheets.`);
         return;
       }
 
       let range = `Request!${String.fromCharCode(65 + columnIndex)}${rowIndex + 1}`;
-      console.log(range);
+      console.log('range', range);
       const response = await insertAccpetRequest([values], range);
 
       resolve(response);
