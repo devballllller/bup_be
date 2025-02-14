@@ -9,7 +9,7 @@ async function findEmployeeRestController(req, res) {
 
   try {
     const rows = await findEmployeeRestService(name);
-
+    console.log(name);
     if (rows.length > 0) {
       const employee = rows[0];
 
@@ -32,7 +32,8 @@ async function findEmployeeRestController(req, res) {
           restUse: employee[28],
           restNotUse: employee[30],
         },
-        status: 200,
+        success: true,
+        message: 'Truy xuất thành công thông tin ngày phép nhân viên',
       });
     } else {
       res.status(404).json({ error: 'Không tìm thấy tên trong bảng tính.' });
@@ -57,13 +58,14 @@ async function findEmployeeSalaryController(req, res) {
       const employee = rows[0];
 
       res.status(200).json({
+        success: true,
+        message: 'truy xuất thông tin người dùng thành công',
         data: {
           EmployeeId: employee[0],
           EmployeeName: employee[1],
           Position: employee[2],
           UrlSalary: employee[5],
         },
-        status: 200,
       });
     } else {
       res.status(404).json({ error: 'Không tìm thấy tên trong bảng tính.' });

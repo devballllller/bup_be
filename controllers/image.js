@@ -23,9 +23,11 @@ const uploadImage = async (req, res) => {
         return res.status(400).json({ error: 'No file uploaded!' });
       }
       res.json({
-        status: 201,
-        message: 'Upload successful!',
-        imageUrl: req.file.path, // Link ảnh trên Cloudinary
+        success: true,
+        message: 'Upload image successful!',
+        data: {
+          image: req.file.path,
+        },
       });
     });
   } catch (error) {

@@ -12,7 +12,8 @@ async function loginController(req, res) {
 
     if (rows.length > 0) {
       res.status(200).json({
-        status: 2000,
+        success: true,
+        message: 'Đăng nhập thành công',
         data: rows,
       });
     } else {

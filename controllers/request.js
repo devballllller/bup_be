@@ -1,21 +1,18 @@
-const { getSendAllRequestService, getSendRequestService, PostSendRequestService } = require('../services/request');
+const { getSendAllRequestService, getSendRequestService, PostSendRequestService, InsertServices } = require('../services/request');
 const { getSendEmailController } = require('./email');
 
 async function getSendAllRequestController(req, res) {
-  const { name, employeeId } = req.body;
-
-  console.log(name, employeeId);
-  if (!name || !employeeId) {
-    return res.status(400).json({ error: 'Tên không được phép rỗng. hoặc không tồn tại nhân viên' });
-  }
-
   try {
-    const rows = await getSendAllRequestService(name, employeeId);
-    console.log(rows);
-    if (rows?.length > 0) {
+    const rows = await getSendAllRequestService();
+
+    // const data = rows?.filter((els) => els[5] == 'FALSE');
+    const data = rows?.filter((els) => els[5] == 'FALSE');
+
+    if (data?.length > 0) {
       res.status(200).json({
-        data: {},
-        status: 200,
+        data,
+        success: true,
+        message: 'Truy xuất thành công tất cả nhân viên',
       });
     } else {
       res.status(404).json({ error: 'Không tìm thấy tên trong bảng tính.' });
@@ -35,12 +32,12 @@ async function getSendRequestController(req, res) {
   }
 
   try {
-    const rows = await getSendRequestService(employeeId);
-    console.log(rows, '12');
+    const data = await getSendRequestService(employeeId);
 
     res.status(200).json({
-      data: { rows },
-      status: 200,
+      data,
+      success: true,
+      message: 'Truy xuất số ngày phép thành công',
     });
   } catch (error) {
     console.error('Lỗi:', error);
@@ -67,11 +64,32 @@ async function postSendRequestController(req, res) {
       });
     }
 
-    return res.status(200).json(rows);
+    return res.status(201).json({
+      success: true,
+      message: 'Gửi yêu cầu thành công',
+      data: [],
+    });
   } catch (error) {
     console.error('Lỗi:', error);
     res.status(500).json({ error: 'Lỗi khi truy xuất dữ liệu.' });
   }
 }
 
-module.exports = { getSendAllRequestController, getSendRequestController, postSendRequestController };
+async function insertAcceptController(req, res) {
+  const { requestId, value, field } = req.body;
+
+  try {
+    const data = await InsertServices(requestId, value, field);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Gửi yêu cầu thành công',
+      data,
+    });
+  } catch (error) {
+    console.error('Lỗi:', error);
+    res.status(500).json({ error: 'Lỗi khi truy xuất dữ liệu. hàm testInsert' });
+  }
+}
+
+module.exports = { getSendAllRequestController, getSendRequestController, postSendRequestController, insertAcceptController };

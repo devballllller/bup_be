@@ -26,27 +26,35 @@ async function getSheetData(sheetKey) {
 }
 
 // Hàm ghi dữ liệu vào Google Sheets
-async function appendData(sheetKey, values) {
+async function appendData(sheetKey, values, range) {
   try {
-    if (!SHEETS_CONFIG[sheetKey]) throw new Error('Invalid sheet key');
+    // Kiểm tra sheetKey hợp lệ
+    if (!SHEETS_CONFIG[sheetKey]) {
+      throw new Error(`Invalid sheet key: ${sheetKey}`);
+    }
+
+    // Đảm bảo values luôn là mảng 2D
+    const formattedValues = Array.isArray(values[0]) ? values : [values];
+
+    console.log(SHEETS_CONFIG[sheetKey].id, formattedValues, range);
 
     const auth = await getAuthClient();
-    const res = await sheets.spreadsheets.values.append({
+    const res = await sheets.spreadsheets.values.update({
       auth,
       spreadsheetId: SHEETS_CONFIG[sheetKey].id,
-      range: SHEETS_CONFIG[sheetKey].range,
+      range: range,
       valueInputOption: 'RAW',
-      resource: { values: [values] },
+      resource: { values: formattedValues },
     });
 
-    if (!res.data || !res.data.values) {
+    if (!res.data) {
       console.warn(`No data found for ${sheetKey}`);
-      return []; // Tránh lỗi khi truy cập `.values`
+      return [];
     }
 
     return res.data;
   } catch (error) {
-    console.error(`Error fetching data for ${sheetKey}:`, error);
+    console.error(`Error appending data for ${sheetKey}:`, error.message);
     return [];
   }
 }
@@ -72,8 +80,18 @@ async function sendRequest(data) {
 }
 
 // Tất cả dữ liệu theo tên trong bảng Chấm công
+async function insertAccpetRequest(values, range) {
+  return await appendData('REQUEST', values, range);
+}
+
+// Tất cả dữ liệu theo tên trong bảng Chấm công
 async function allRequestAccept() {
   return await getSheetData('ACCEPT_REQUEST');
 }
 
-module.exports = { getSheetData, allUserRest, allUserSalary, allRequest, sendRequest, allRequestAccept };
+// Tất cả dữ liệu theo tên trong bảng Chấm công
+async function appendRestTEST(values, range) {
+  return await appendData('ACCEPT_REQUEST', values, range);
+}
+
+module.exports = { getSheetData, allUserRest, allUserSalary, allRequest, sendRequest, allRequestAccept, appendRestTEST, insertAccpetRequest };
