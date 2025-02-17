@@ -81,7 +81,7 @@ async function postAttendanceControllersH(req, res) {
 
 async function getAllAttendanceControllersH(req, res) {
   try {
-    const data = await getAllAttendanceServices();
+    const data = await getAllAttendanceServicesCheckField();
     return res.status(200).json({
       success: true,
       message: 'Get all attendance susscess!',
