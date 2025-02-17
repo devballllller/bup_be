@@ -4,7 +4,10 @@ const { loginController } = require('../controllers/auth');
 const { getSendAllRequestController, getSendRequestController, postSendRequestController, insertAcceptController } = require('../controllers/request');
 const { getSendEmailController } = require('../controllers/email');
 const { uploadImage } = require('../controllers/image');
+const { getAllAttendanceControllersH, authH, postAttendanceControllersH } = require('../controllers/h/h');
+
 const limiter = require('../middlewares/rateLimit');
+const { getAllTimekeepingControllers, insertTimekeepingControllers } = require('../controllers/timekeeping');
 
 const router = express.Router();
 
@@ -34,6 +37,13 @@ router.post('/post-send-email', getSendEmailController);
 // -----------------------=> post image
 router.post('/post-email', uploadImage);
 
-// -----------------------=> test
+// -----------------------=> timekeeoing
+router.get('/timekeeping', getAllTimekeepingControllers);
+router.post('/timekeeping-insert', insertTimekeepingControllers);
+
+// -----------------------=> H
+router.post('/H/auth-login', authH);
+router.post('/H/post-attendance', postAttendanceControllersH);
+router.get('/H/get-all-attendance', getAllAttendanceControllersH);
 
 module.exports = router;

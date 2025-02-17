@@ -5,9 +5,9 @@ async function getSendAllRequestController(req, res) {
   try {
     const rows = await getSendAllRequestService();
 
+    // const data = rows?.filter((els) => els[6] == 'FALSE');
     // const data = rows?.filter((els) => els[5] == 'FALSE');
-    const data = rows?.filter((els) => els[5] == 'FALSE');
-
+    const data = rows;
     if (data?.length > 0) {
       res.status(200).json({
         data,
@@ -26,7 +26,6 @@ async function getSendAllRequestController(req, res) {
 async function getSendRequestController(req, res) {
   const { employeeId } = req.body;
 
-  console.log(employeeId);
   if (!employeeId) {
     return res.status(400).json({ error: 'Tên không được phép rỗng. hoặc không tồn tại nhân viên' });
   }
@@ -37,7 +36,7 @@ async function getSendRequestController(req, res) {
     res.status(200).json({
       data,
       success: true,
-      message: 'Truy xuất số ngày phép thành công',
+      message: 'Truy xuất các yêu cầu thành công',
     });
   } catch (error) {
     console.error('Lỗi:', error);
@@ -46,7 +45,7 @@ async function getSendRequestController(req, res) {
 }
 
 async function postSendRequestController(req, res) {
-  const { name, employeeId, TypeRequest, Request, Image } = req.body;
+  const { name, employeeId, TypeRequest, DateTimekeeping, Request, Image } = req.body;
 
   console.log(name, employeeId);
   if (!name || !employeeId) {
@@ -54,7 +53,7 @@ async function postSendRequestController(req, res) {
   }
 
   try {
-    const rows = await PostSendRequestService(name, employeeId, TypeRequest, Request, Image);
+    const rows = await PostSendRequestService(name, employeeId, TypeRequest, Request, Image, DateTimekeeping);
 
     if (rows.status == 201) {
       await getSendEmailController({
@@ -76,10 +75,10 @@ async function postSendRequestController(req, res) {
 }
 
 async function insertAcceptController(req, res) {
-  const { requestId, value, field } = req.body;
-
+  const { employeeId, value, field } = req.body;
+  console.log(employeeId, value, field);
   try {
-    const data = await InsertServices(requestId, value, field);
+    const data = await InsertServices(employeeId, value, field);
 
     return res.status(200).json({
       success: true,

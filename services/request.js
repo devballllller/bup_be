@@ -1,5 +1,6 @@
 const { allRequest, sendRequest, insertAccpetRequest, allSendRequest } = require('./configService');
 const { generateCode, getCurrentTime } = require('../constants');
+const { cloudfunctions } = require('googleapis/build/src/apis/cloudfunctions');
 
 // Tìm dữ liệu theo tên trong bảng Salary
 async function getSendAllRequestService() {
@@ -9,16 +10,16 @@ async function getSendAllRequestService() {
 
 async function getSendRequestService(employeeId) {
   const allEmployee = await allRequest();
-  const data = allEmployee?.filter((empId) => empId[2] == employeeId);
+  console.log(allEmployee);
+  const data = allEmployee?.filter((empId) => empId[0] == employeeId);
   return data;
 }
 
-async function PostSendRequestService(name, employeeId, TypeRequest, Request, Image) {
+async function PostSendRequestService(name, employeeId, TypeRequest, Request, Image, DateTimekeeping) {
   return new Promise(async (resolve, reject) => {
     try {
-      const uuid = generateCode();
       const timestamp = getCurrentTime();
-      const user = [uuid, TypeRequest, employeeId, Request, Image, 'FALSE', timestamp];
+      const user = [employeeId, TypeRequest, name, Request, Image, DateTimekeeping, 'FALSE', timestamp];
 
       await sendRequest(user);
 
@@ -32,19 +33,16 @@ async function PostSendRequestService(name, employeeId, TypeRequest, Request, Im
   });
 }
 
-async function InsertServices(requestId, values, field) {
-  console.log(requestId, values, field);
+async function InsertServices(employeeId, values, field) {
   return new Promise(async (resolve, reject) => {
     try {
       const data = await allSendRequest();
-      console.log(data, 'data');
-      let rowIndex = data.findIndex((row) => row[0] == requestId);
+      let rowIndex = data.findIndex((row) => row[0] == employeeId);
 
       if (rowIndex === -1) {
-        console.log(`Không tìm thấy tên ${requestId} trong Google Sheets.`);
+        console.log(`Không tìm thấy tên ${employeeId} trong Google Sheets.`);
         return;
       }
-
       let columnIndex = data[0].indexOf(process.env.FIELD_ACCEPT_REQUEST);
 
       if (columnIndex === -1) {

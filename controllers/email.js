@@ -8,12 +8,12 @@ async function getSendEmailController({ to, subject, text }) {
   }
 
   try {
-    // await transporter.sendMail({
-    //   from: process.env.EMAIL_USER,
-    //   to,
-    //   subject,
-    //   text,
-    // });
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to,
+      subject,
+      text,
+    });
 
     console.log('Email gửi thành công!');
   } catch (error) {

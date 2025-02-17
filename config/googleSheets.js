@@ -8,9 +8,17 @@ const KEY_FILE_PATH = path.join(__dirname, '../subtle-lambda-438005-m6-9c5ab8ef5
 const SHEETS_CONFIG = {
   REST: { id: '12IdVLhUNYU57tEZ6kE-DVtrZyhcAmlReG73pRUDI-WY', range: '2024!B5:AG1000' },
   SALARY: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'Users!A2:AG1000' },
+
   REQUEST: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'Request!A2:AG1000' },
   REQUEST_INSERT: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'Request!A1:AG1000' },
   ACCEPT_REQUEST: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'Salary!A1:AG1000' },
+
+  TIMEKEEPING_INDEX: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'Timekeeping!A6:AY1000' },
+  TIMEKEEPING: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'Timekeeping!A8:AY1000' },
+
+  HUY_ATTENDANCE: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'T2!A2:AH1000' },
+  HUY_ATTENDANCE_INDEX: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'T2!A1:AH1000' },
+  HUY_LOGS: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'Logs!A1:AH1000' },
 };
 
 // Hàm lấy client xác thực Google Sheets API

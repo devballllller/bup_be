@@ -55,6 +55,7 @@ async function appendData(sheetKey, values, range) {
 }
 
 async function updateData(sheetKey, values, range) {
+  console.log(sheetKey, values, range);
   try {
     if (!SHEETS_CONFIG[sheetKey]) {
       throw new Error(`Invalid sheet key: ${sheetKey}`);
@@ -120,4 +121,26 @@ async function appendRestTEST(values, range) {
   return await appendData('ACCEPT_REQUEST', values, range);
 }
 
-module.exports = { getSheetData, allUserRest, allUserSalary, allRequest, sendRequest, allRequestAccept, appendRestTEST, insertAccpetRequest, updateData, allSendRequest };
+// ----------------TEST
+async function allTimekeeping() {
+  return await getSheetData('TIMEKEEPING_INDEX');
+}
+
+async function insertTimekeeping(values, range) {
+  return await updateData('TIMEKEEPING_INDEX', values, range);
+}
+
+module.exports = {
+  insertTimekeeping,
+  allTimekeeping,
+  getSheetData,
+  allUserRest,
+  allUserSalary,
+  allRequest,
+  sendRequest,
+  allRequestAccept,
+  appendRestTEST,
+  insertAccpetRequest,
+  updateData,
+  allSendRequest,
+};
