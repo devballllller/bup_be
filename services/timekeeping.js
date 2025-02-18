@@ -11,6 +11,15 @@ async function getAllTimekeepingServices() {
   });
 }
 
+const getExcelColumnName = (colIndex) => {
+  let columnName = '';
+  while (colIndex >= 0) {
+    columnName = String.fromCharCode((colIndex % 26) + 65) + columnName;
+    colIndex = Math.floor(colIndex / 26) - 1;
+  }
+  return columnName;
+};
+
 async function insertTimekeepingServices(employeeId, dayTimekeeping, values) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -18,27 +27,34 @@ async function insertTimekeepingServices(employeeId, dayTimekeeping, values) {
 
       let rowIndex = data.findIndex((row) => row[1] == employeeId);
       if (rowIndex === -1) {
-        console.log(`Không tìm thấy tên ${employeeId} trong Google Sheets.`);
+        console.log(`Không tìm thấy nhân viên ${employeeId} trong Google Sheets.`);
+        reject(`Không tìm thấy nhân viên ${employeeId}`);
         return;
       }
 
       let columnIndex = data[0].indexOf(dayTimekeeping);
-
       if (columnIndex === -1) {
         console.log(`Không tìm thấy cột ${dayTimekeeping} trong Google Sheets.`);
+        reject(`Không tìm thấy cột ${dayTimekeeping}`);
         return;
       }
-      let range = `Timekeeping!${String.fromCharCode(65 + columnIndex)}${rowIndex + 6}`;
-      console.log('range', range);
+
+      // Sử dụng hàm để chuyển đổi index thành ký hiệu cột
+      let columnLetter = getExcelColumnName(columnIndex);
+      let range = `Timekeeping!${columnLetter}${rowIndex + 6}`;
+
+      console.log('range:', range);
+
       const response = await insertTimekeeping([values], range);
       if (!response) {
-        reject('Chèn chấm công không thầnh công tại controller');
+        reject('Chèn chấm công không thành công tại controller');
+        return;
       }
 
-      console.log(response);
-
+      console.log('Response:', response);
       resolve(response);
     } catch (error) {
+      console.error('Lỗi trong insertTimekeepingServices:', error);
       reject(error);
     }
   });

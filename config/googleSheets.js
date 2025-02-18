@@ -16,8 +16,8 @@ const SHEETS_CONFIG = {
   TIMEKEEPING_INDEX: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'Timekeeping!A6:AY1000' },
   TIMEKEEPING: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'Timekeeping!A8:AY1000' },
 
-  HUY_ATTENDANCE: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'T2!A2:AH1000' },
-  HUY_ATTENDANCE_INDEX: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'T2!A1:AH1000' },
+  HUY_ATTENDANCE: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'T2!A7:AH1000' },
+  HUY_ATTENDANCE_INDEX: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'T2!A6:AH1000' },
   HUY_LOGS: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'Logs!A1:AH1000' },
 };
 

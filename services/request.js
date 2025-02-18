@@ -19,7 +19,9 @@ async function PostSendRequestService(name, employeeId, TypeRequest, Request, Im
   return new Promise(async (resolve, reject) => {
     try {
       const timestamp = getCurrentTime();
-      const user = [employeeId, TypeRequest, name, Request, Image, DateTimekeeping, 'FALSE', timestamp];
+      const stateRequest = process.env.DEFAUL_VALUE_REQUEST_N;
+      console.log(stateRequest, 'stateRequest');
+      const user = [employeeId, TypeRequest, name, Request, Image, DateTimekeeping, stateRequest, timestamp];
 
       await sendRequest(user);
 

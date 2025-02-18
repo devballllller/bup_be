@@ -1,7 +1,0 @@
-@host=http://localhost:3001
-
-#
-
-@QUERY="NY"
-GET {{host}}/api/find-value
-
