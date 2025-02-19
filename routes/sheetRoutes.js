@@ -4,8 +4,8 @@ const { loginController } = require('../controllers/auth');
 const { getSendAllRequestController, getSendRequestController, postSendRequestController, insertAcceptController } = require('../controllers/request');
 const { getSendEmailController } = require('../controllers/email');
 const { uploadImage } = require('../controllers/image');
-const { getAllAttendanceControllersH, authH, postAttendanceControllersH } = require('../controllers/h/h');
-
+const { getAllAttendanceControllersH, authH, postAttendanceControllersH, allSalaryHServicesControllersH } = require('../controllers/h/h');
+const { biPostEmployeeController } = require('../controllers/bi/index');
 const limiter = require('../middlewares/rateLimit');
 const { getAllTimekeepingControllers, insertTimekeepingControllers } = require('../controllers/timekeeping');
 
@@ -45,5 +45,9 @@ router.post('/timekeeping-insert', insertTimekeepingControllers);
 router.post('/H/auth-login', authH);
 router.post('/H/post-attendance', postAttendanceControllersH);
 router.get('/H/get-all-attendance', getAllAttendanceControllersH);
+router.get('/H/get-all-salary', allSalaryHServicesControllersH);
+
+// -----------------------=> Bi
+router.post('/bi/post-employee', biPostEmployeeController);
 
 module.exports = router;

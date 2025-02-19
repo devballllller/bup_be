@@ -1,4 +1,4 @@
-const { allUser, allUserCheckField, allUserUpdate, allLogsAppendH } = require('./configService');
+const { allUser, allUserCheckField, allUserUpdate, allLogsAppendH, allSalaryH } = require('./configService');
 // --------------------------------- login
 
 async function getAllAttendanceServices() {
@@ -46,4 +46,15 @@ async function appendAttendance(values, range) {
   });
 }
 
-module.exports = { getAllAttendanceServices, getAllAttendanceServicesCheckField, insertAttendance, appendAttendance };
+async function allSalaryHServices() {
+  return new Promise(async (resolve, reject) => {
+    const data = await allSalaryH();
+    resolve(data);
+    try {
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+module.exports = { getAllAttendanceServices, getAllAttendanceServicesCheckField, insertAttendance, appendAttendance, allSalaryHServices };

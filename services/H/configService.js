@@ -104,4 +104,11 @@ async function allLogsH() {
 async function allLogsAppendH(values, range) {
   return await appendData('HUY_LOGS', values, range);
 }
-module.exports = { allUser, allLogsAppendH, allUserUpdate, allUserCheckField, allLogsH };
+
+//
+
+async function allSalaryH() {
+  return await getSheetData('HUY_ATTENDANCE_SALARY');
+}
+
+module.exports = { allUser, allLogsAppendH, allUserUpdate, allUserCheckField, allLogsH, allSalaryH };

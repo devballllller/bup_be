@@ -1,5 +1,5 @@
 const { cloudfunctions } = require('googleapis/build/src/apis/cloudfunctions');
-const { getAllAttendanceServices, getAllAttendanceServicesCheckField, insertAttendance, appendAttendance } = require('../../services/H/h');
+const { getAllAttendanceServices, getAllAttendanceServicesCheckField, insertAttendance, appendAttendance, allSalaryHServices } = require('../../services/H/h');
 
 //AUTH
 async function authH(req, res) {
@@ -30,7 +30,7 @@ async function postAttendanceControllersH(req, res) {
 
   try {
     const data = await getAllAttendanceServicesCheckField();
-
+    console.log(data);
     const today = new Date();
     const dd = today.getDate();
     const mm = today.getMonth() + 1;
@@ -50,19 +50,20 @@ async function postAttendanceControllersH(req, res) {
     }
 
     let columnIndex = data[0].indexOf(formattedDate);
+
     if (columnIndex == -1) {
       console.log(`Không thể tìm thấy trường ${name} trong hàng`);
       return;
     }
-
-    let rangeTotalHour = `T${mm}!${String.fromCharCode(65 + columnIndex)}${rowIndex + 1}`;
+    console.log(rowIndex, columnIndex);
+    let rangeTotalHour = `T${mm}!${String.fromCharCode(65 + columnIndex)}${rowIndex + parseInt(process.env.VALUE_STARTED)}`;
     console.log(rangeTotalHour, 'rangeTotalHour');
 
     await insertAttendance([totalHour], rangeTotalHour);
-    let rangeTypeHour = `T${mm}!${String.fromCharCode(65 + columnIndex)}${rowIndex + 2}`;
+    let rangeTypeHour = `T${mm}!${String.fromCharCode(65 + columnIndex)}${rowIndex + 1 + parseInt(process.env.VALUE_STARTED)}`;
     await insertAttendance([typeHour], rangeTypeHour);
     const logValue = `Đã chấm công vào lúc ${totalHour} tổng giờ là ${typeHour}`;
-
+    console.log(name, logValue, formattedDate, formattedTime);
     await appendAttendance([name, logValue, formattedDate, formattedTime]);
 
     if (data?.length > 0) {
@@ -89,4 +90,16 @@ async function getAllAttendanceControllersH(req, res) {
     });
   } catch (error) {}
 }
-module.exports = { postAttendanceControllersH, getAllAttendanceControllersH, authH };
+
+async function allSalaryHServicesControllersH(req, res) {
+  try {
+    const data = await allSalaryHServices();
+    return res.status(200).json({
+      success: true,
+      message: 'Get all attendance susscess!',
+      data,
+    });
+  } catch (error) {}
+}
+
+module.exports = { postAttendanceControllersH, getAllAttendanceControllersH, authH, allSalaryHServicesControllersH };

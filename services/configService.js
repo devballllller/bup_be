@@ -129,6 +129,11 @@ async function allTimekeeping() {
 async function insertTimekeeping(values, range) {
   return await updateData('TIMEKEEPING_INDEX', values, range);
 }
+// ----------------TEST
+
+async function sendRequestBI(data) {
+  return await appendData('BI', data);
+}
 
 module.exports = {
   insertTimekeeping,
@@ -143,4 +148,5 @@ module.exports = {
   insertAccpetRequest,
   updateData,
   allSendRequest,
+  sendRequestBI,
 };
