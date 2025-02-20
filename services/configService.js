@@ -129,10 +129,20 @@ async function allTimekeeping() {
 async function insertTimekeeping(values, range) {
   return await updateData('TIMEKEEPING_INDEX', values, range);
 }
-// ----------------TEST
+// ----------------BI
 
 async function sendRequestBI(data) {
   return await appendData('BI', data);
+}
+
+// ----------------THACH
+
+async function getAllProductThach() {
+  return await getSheetData('THACH');
+}
+
+async function appendProductThach(data) {
+  return await appendData('THACH', data);
 }
 
 module.exports = {
@@ -149,4 +159,6 @@ module.exports = {
   updateData,
   allSendRequest,
   sendRequestBI,
+  getAllProductThach,
+  appendProductThach,
 };

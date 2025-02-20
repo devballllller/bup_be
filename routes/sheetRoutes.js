@@ -6,6 +6,8 @@ const { getSendEmailController } = require('../controllers/email');
 const { uploadImage } = require('../controllers/image');
 const { getAllAttendanceControllersH, authH, postAttendanceControllersH, allSalaryHServicesControllersH } = require('../controllers/h/h');
 const { biPostEmployeeController } = require('../controllers/bi/index');
+const { thachPostProductController, thachGetAllProductController } = require('../controllers/thach/index');
+
 const limiter = require('../middlewares/rateLimit');
 const { getAllTimekeepingControllers, insertTimekeepingControllers } = require('../controllers/timekeeping');
 
@@ -49,5 +51,9 @@ router.get('/H/get-all-salary', allSalaryHServicesControllersH);
 
 // -----------------------=> Bi
 router.post('/bi/post-employee', biPostEmployeeController);
+
+// -----------------------=> THACH
+router.post('/thach/post-product', thachPostProductController);
+router.get('/thach/get-all-product', thachGetAllProductController);
 
 module.exports = router;
