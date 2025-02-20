@@ -4,7 +4,7 @@ const { allUser, allUserCheckField, allUserUpdate, allLogsAppendH, allSalaryH } 
 async function getAllAttendanceServices() {
   return new Promise(async (resolve, reject) => {
     try {
-      const data = await allUser();
+      const data = await allSalaryH();
       resolve(data);
     } catch (error) {
       reject(error);

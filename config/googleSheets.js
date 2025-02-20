@@ -21,7 +21,7 @@ const SHEETS_CONFIG = {
 
   HUY_ATTENDANCE: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'T2!A7:AH1000' },
   HUY_ATTENDANCE_INDEX: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'T2!A6:AH1000' },
-  HUY_ATTENDANCE_SALARY: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'T2!E1:F4' },
+  HUY_ATTENDANCE_SALARY: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'T2!E1:G4' },
   HUY_LOGS: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'Logs!A1:AH1000' },
 
   // khác loài

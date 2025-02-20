@@ -7,7 +7,7 @@ async function authH(req, res) {
     const { name, password } = req.body;
     const rows = await getAllAttendanceServices();
 
-    const data = rows?.filter((els) => els[1] == name && els[2] == password);
+    const data = rows?.filter((els) => els[0] == name && els[2] == password);
 
     if (data?.length > 0) {
       res.status(200).json({
