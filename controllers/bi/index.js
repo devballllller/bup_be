@@ -10,14 +10,14 @@ async function biPostEmployeeController(req, res) {
   try {
     const rows = await biPostEmployeeService(name, dob, cccd, cmnd, address);
 
-    if (rows.length > 0) {
+    if (rows) {
       res.status(200).json({
         data: {},
         success: true,
         message: 'Truy xuất thành công thông tin ngày phép nhân viên',
       });
     } else {
-      res.status(404).json({ error: 'Không tìm thấy tên trong bảng tính.' });
+      res.status(404).json({ error: 'Không tìm thấy tên trong bảng tính22.' });
     }
   } catch (error) {
     console.error('Lỗi:', error);
