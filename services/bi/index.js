@@ -5,7 +5,43 @@ async function biPostEmployeeService(name, gender, dob, phone, permanentaddress,
     try {
       console.log(name, gender, dob, phone, permanentaddress, currentaddress, cmnd, cccd, issueddate, SIC, SIB, PITC);
 
-      const response = await sendRequestBI([name, gender, dob, phone, permanentaddress, currentaddress, cmnd, cccd, issueddate, SIC, SIB, PITC]);
+      const response = await sendRequestBI([
+        '',
+        '',
+        name,
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        gender,
+        dob,
+        '',
+        phone,
+        '',
+        permanentaddress,
+        currentaddress,
+        cmnd,
+        cccd,
+        issueddate,
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        SIC,
+        SIB,
+        PITC,
+      ]);
 
       resolve(response);
     } catch (error) {
