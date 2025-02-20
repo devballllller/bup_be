@@ -1,15 +1,15 @@
 const { biPostEmployeeService } = require('../../services/bi/index');
 
 async function biPostEmployeeController(req, res) {
-  const { name, dob, cccd, cmnd } = req.body;
+  const { name, dob, cccd, cmnd, address } = req.body;
 
   if (!name) {
     return res.status(400).json({ error: 'Tên không được phép rỗng.' });
   }
 
   try {
-    const rows = await biPostEmployeeService(name, dob, cccd, cmnd);
-    console.log(name);
+    const rows = await biPostEmployeeService(name, dob, cccd, cmnd, address);
+
     if (rows.length > 0) {
       res.status(200).json({
         data: {},

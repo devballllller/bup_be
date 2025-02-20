@@ -1,13 +1,16 @@
 const { sendRequestBI } = require('../configService');
 
-async function biPostEmployeeService(name, dob, cccd, cmnd) {
+async function biPostEmployeeService(name, dob, cccd, cmnd, address) {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await sendRequestBI([name, dob, cccd, cmnd]);
+      console.log(name, dob, cccd, cmnd, address);
+
+      const response = await sendRequestBI([name, dob, cccd, cmnd, address]);
 
       resolve(response);
     } catch (error) {
       reject(error);
+      console.log(error);
     }
   });
 }
