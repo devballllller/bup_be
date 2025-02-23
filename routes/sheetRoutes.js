@@ -56,6 +56,6 @@ router.post('/bi/post-employee', biPostEmployeeController);
 router.post('/thach/post-product', thachPostProductController);
 router.get('/thach/get-all-product', thachGetAllProductController);
 router.post('/thach/get-filter-product', thachGetFilterProductController);
-router.get('/thach/get-product-name', getfilterProductNameThachController);
+router.post('/thach/get-product-name', getfilterProductNameThachController);
 
 module.exports = router;

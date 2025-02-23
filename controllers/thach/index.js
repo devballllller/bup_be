@@ -44,9 +44,11 @@ async function thachPostProductController(req, res) {
   }
 }
 
+// lấy filter các product name
 async function getfilterProductNameThachController(req, res) {
+  const { sewingName } = req.body;
   try {
-    const data = await getfilterProductNameThachServices();
+    const data = await getfilterProductNameThachServices(sewingName);
 
     if (data) {
       res.status(200).json({
@@ -64,9 +66,9 @@ async function getfilterProductNameThachController(req, res) {
 }
 
 async function thachGetFilterProductController(req, res) {
-  const { sewingName, productName, date } = req.body;
+  const { sewingName, date } = req.body;
   try {
-    const data = await getfilterProductThachServices(sewingName, productName, date);
+    const data = await getfilterProductThachServices(sewingName, date);
     if (data) {
       res.status(200).json({
         data,

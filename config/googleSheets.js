@@ -19,9 +19,9 @@ const SHEETS_CONFIG = {
   THACH_INDEX: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'THACH!A1:AH1000' },
   THACH: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'THACH!A2:AH1000' },
 
-  HUY_ATTENDANCE: { id: '1BXmuj4q2yv_jcJiDj0qW0kEPCzDhR-BoChOQGrvkZKA', range: 'T2!A7:AH1000' },
-  HUY_ATTENDANCE_INDEX: { id: '1BXmuj4q2yv_jcJiDj0qW0kEPCzDhR-BoChOQGrvkZKA', range: 'T2!A6:AH1000' },
-  HUY_ATTENDANCE_SALARY: { id: '1BXmuj4q2yv_jcJiDj0qW0kEPCzDhR-BoChOQGrvkZKA', range: 'T2!E1:G4' },
+  HUY_ATTENDANCE: { id: '1BXmuj4q2yv_jcJiDj0qW0kEPCzDhR-BoChOQGrvkZKA', range: 'T2!A8:AH1000' },
+  HUY_ATTENDANCE_INDEX: { id: '1BXmuj4q2yv_jcJiDj0qW0kEPCzDhR-BoChOQGrvkZKA', range: 'T2!A7:AH1000' },
+  HUY_ATTENDANCE_SALARY: { id: '1BXmuj4q2yv_jcJiDj0qW0kEPCzDhR-BoChOQGrvkZKA', range: 'T2!E1:G5' },
   HUY_LOGS: { id: '1BXmuj4q2yv_jcJiDj0qW0kEPCzDhR-BoChOQGrvkZKA', range: 'Logs!A1:AH1000' },
 
   // khác loài

@@ -1,5 +1,7 @@
 const { appendProductThach, getAllProductThach } = require('../configService');
+const { locationCell } = require('../../config/thach/locationCell');
 
+// lấy tất cả các sảm phẩm các chuyền
 async function getAllProductThachServices() {
   return new Promise(async (resolve, reject) => {
     try {
@@ -11,11 +13,13 @@ async function getAllProductThachServices() {
   });
 }
 
-async function getfilterProductThachServices(sewingName, productName, date) {
+// lấy tất cả các sản phẩm lọc theo chuyền lọc theo ngày
+async function getfilterProductThachServices(sewingName, date) {
   return new Promise(async (resolve, reject) => {
     try {
       const rows = await getAllProductThach();
-      const data = rows.filter((row) => row[0] == sewingName && row[1] == productName && row[2] == date);
+      console.log(sewingName, date, rows);
+      const data = rows.filter((row) => row[locationCell.SEWING_NAME] == sewingName && row[locationCell.DATE] == date);
       resolve(data);
     } catch (error) {
       reject(error);
@@ -23,7 +27,8 @@ async function getfilterProductThachServices(sewingName, productName, date) {
   });
 }
 
-async function getfilterProductNameThachServices() {
+// lấy filter các product name
+async function getfilterProductNameThachServices(sewingName) {
   return new Promise(async (resolve, reject) => {
     try {
       const getField = [];
@@ -41,6 +46,7 @@ async function getfilterProductNameThachServices() {
   });
 }
 
+// thêm sản phẩm vào
 async function appendProductThachServices(sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails) {
   return new Promise(async (resolve, reject) => {
     try {
