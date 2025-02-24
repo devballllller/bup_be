@@ -6,7 +6,14 @@ const { getSendEmailController } = require('../controllers/email');
 const { uploadImage } = require('../controllers/image');
 const { getAllAttendanceControllersH, authH, postAttendanceControllersH, allSalaryHServicesControllersH } = require('../controllers/h/h');
 const { biPostEmployeeController } = require('../controllers/bi/index');
-const { thachPostProductController, thachGetAllProductController, thachGetFilterProductController, getfilterProductNameThachController } = require('../controllers/thach/index');
+const {
+  thachPostProductController,
+  thachGetAllProductController,
+  thachGetFilterProductController,
+  getfilterProductNameThachController,
+  thachPostPresentController,
+  thachGetPresentController,
+} = require('../controllers/thach/index');
 
 const limiter = require('../middlewares/rateLimit');
 const { getAllTimekeepingControllers, insertTimekeepingControllers } = require('../controllers/timekeeping');
@@ -54,6 +61,8 @@ router.post('/bi/post-employee', biPostEmployeeController);
 
 // -----------------------=> THACH
 router.post('/thach/post-product', thachPostProductController);
+router.post('/thach/post-present', thachPostPresentController);
+router.post('/thach/get-present', thachGetPresentController);
 router.get('/thach/get-all-product', thachGetAllProductController);
 router.post('/thach/get-filter-product', thachGetFilterProductController);
 router.post('/thach/get-product-name', getfilterProductNameThachController);

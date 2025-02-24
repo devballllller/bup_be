@@ -1,4 +1,12 @@
-const { appendProductThachServices, getAllProductThachServices, getfilterProductThachServices, getfilterProductNameThachServices } = require('../../services/thach/index');
+const { cloudbilling_v1beta } = require('googleapis');
+const {
+  appendProductThachServices,
+  getAllProductThachServices,
+  getfilterProductThachServices,
+  getfilterProductNameThachServices,
+  appendPresentThachServices,
+  getPresentThachServices,
+} = require('../../services/thach/index');
 
 async function thachGetAllProductController(req, res) {
   try {
@@ -20,18 +28,68 @@ async function thachGetAllProductController(req, res) {
 }
 
 async function thachPostProductController(req, res) {
-  const { sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails } = req.body;
+  const { sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails, dayTarget } = req.body;
 
   if (!sewingName) {
     return res.status(400).json({ error: 'Tên không được phép rỗng.' });
   }
 
   try {
-    const rows = await appendProductThachServices(sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails);
+    const rows = await appendProductThachServices(sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails, dayTarget);
 
     if (rows) {
       res.status(200).json({
         data: {},
+        success: true,
+        message: 'Truy xuất thành công thông tin ngày phép nhân viên',
+      });
+    } else {
+      res.status(404).json({ error: 'Không tìm thấy tên trong bảng tính22.' });
+    }
+  } catch (error) {
+    console.error('Lỗi:', error);
+    res.status(500).json({ error: 'Lỗi khi truy xuất dữ liệu.' });
+  }
+}
+
+async function thachPostPresentController(req, res) {
+  const { sewingName, date, present, absent } = req.body;
+
+  if (!sewingName) {
+    return res.status(400).json({ error: 'Tên không được phép rỗng.' });
+  }
+
+  try {
+    const rows = await appendPresentThachServices(sewingName, date, present, absent);
+
+    if (rows) {
+      res.status(200).json({
+        data: {},
+        success: true,
+        message: 'Truy xuất thành công thông tin ngày phép nhân viên',
+      });
+    } else {
+      res.status(404).json({ error: 'Không tìm thấy tên trong bảng tính22.' });
+    }
+  } catch (error) {
+    console.error('Lỗi:', error);
+    res.status(500).json({ error: 'Lỗi khi truy xuất dữ liệu.' });
+  }
+}
+
+async function thachGetPresentController(req, res) {
+  const { sewingName, date } = req.body;
+
+  if (!sewingName) {
+    return res.status(400).json({ error: 'Tên không được phép rỗng.' });
+  }
+
+  try {
+    const rows = await getPresentThachServices(sewingName, date);
+    const data = rows.filter((els) => els[0] == sewingName && els[1] == date);
+    if (rows) {
+      res.status(200).json({
+        data,
         success: true,
         message: 'Truy xuất thành công thông tin ngày phép nhân viên',
       });
@@ -69,6 +127,7 @@ async function thachGetFilterProductController(req, res) {
   const { sewingName, date } = req.body;
   try {
     const data = await getfilterProductThachServices(sewingName, date);
+    console.log(data, 'sewingNameLocalsewingNameLocalsewingNameLocal');
     if (data) {
       res.status(200).json({
         data,
@@ -84,4 +143,11 @@ async function thachGetFilterProductController(req, res) {
   }
 }
 
-module.exports = { thachPostProductController, thachGetAllProductController, thachGetFilterProductController, getfilterProductNameThachController };
+module.exports = {
+  thachGetPresentController,
+  thachPostProductController,
+  thachGetAllProductController,
+  thachGetFilterProductController,
+  getfilterProductNameThachController,
+  thachPostPresentController,
+};

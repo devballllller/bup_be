@@ -144,6 +144,13 @@ async function getAllProductThach() {
 async function appendProductThach(data) {
   return await appendData('THACH', data);
 }
+async function appendPresentThach(data) {
+  return await appendData('THACH_PRESENT_STATUS', data);
+}
+
+async function getPresentThach() {
+  return await getSheetData('THACH_PRESENT_STATUS_GET');
+}
 
 module.exports = {
   insertTimekeeping,
@@ -161,4 +168,6 @@ module.exports = {
   sendRequestBI,
   getAllProductThach,
   appendProductThach,
+  appendPresentThach,
+  getPresentThach,
 };

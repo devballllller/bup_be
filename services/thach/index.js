@@ -1,4 +1,4 @@
-const { appendProductThach, getAllProductThach } = require('../configService');
+const { appendProductThach, getAllProductThach, appendPresentThach, getPresentThach } = require('../configService');
 const { locationCell } = require('../../config/thach/locationCell');
 
 // lấy tất cả các sảm phẩm các chuyền
@@ -18,7 +18,6 @@ async function getfilterProductThachServices(sewingName, date) {
   return new Promise(async (resolve, reject) => {
     try {
       const rows = await getAllProductThach();
-      console.log(sewingName, date, rows);
       const data = rows.filter((row) => row[locationCell.SEWING_NAME] == sewingName && row[locationCell.DATE] == date);
       resolve(data);
     } catch (error) {
@@ -47,11 +46,11 @@ async function getfilterProductNameThachServices(sewingName) {
 }
 
 // thêm sản phẩm vào
-async function appendProductThachServices(sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails) {
+async function appendProductThachServices(sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails, dayTarget) {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails);
-      const data = await appendProductThach([sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails]);
+      console.log(sewingName, productName, dayTarget, date, timeLine, actualValue, productReceive, productAccept, productFails, dayTarget);
+      const data = await appendProductThach([sewingName, productName, dayTarget, date, timeLine, actualValue, productReceive, productAccept, productFails]);
       resolve(data);
     } catch (error) {
       reject(error);
@@ -59,4 +58,36 @@ async function appendProductThachServices(sewingName, productName, date, timeLin
   });
 }
 
-module.exports = { getAllProductThachServices, appendProductThachServices, getfilterProductThachServices, getfilterProductNameThachServices };
+// thêm sản
+async function appendPresentThachServices(sewingName, date, present, absent) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const data = await appendPresentThach([sewingName, date, present, absent]);
+      resolve(data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+// thêm sản phẩm vào
+async function getPresentThachServices(sewingName, date) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const data = await getPresentThach(sewingName, date);
+      console.log(data);
+      resolve(data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+module.exports = {
+  getPresentThachServices,
+  appendPresentThachServices,
+  getAllProductThachServices,
+  appendProductThachServices,
+  getfilterProductThachServices,
+  getfilterProductNameThachServices,
+};

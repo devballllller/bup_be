@@ -57,4 +57,15 @@ async function allSalaryHServices() {
   });
 }
 
+async function appendAttendance(values, range) {
+  return new Promise(async (resolve, reject) => {
+    const data = await allLogsAppendH(values, range);
+    resolve(data);
+    try {
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 module.exports = { getAllAttendanceServices, getAllAttendanceServicesCheckField, insertAttendance, appendAttendance, allSalaryHServices };
