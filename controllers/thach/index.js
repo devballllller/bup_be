@@ -41,14 +41,14 @@ async function thachPostProductController(req, res) {
       res.status(200).json({
         data: {},
         success: true,
-        message: 'Truy xuất thành công thông tin ngày phép nhân viên',
+        message: `Thêm sản phẩm ${sewingName} thành công lúc ${timeLine}`,
       });
     } else {
-      res.status(404).json({ error: 'Không tìm thấy tên trong bảng tính22.' });
+      res.status(404).json({ data: {}, success: true, message: `Thêm sản phẩm ${sewingName} thất bại lúc ${timeLine}` });
     }
   } catch (error) {
     console.error('Lỗi:', error);
-    res.status(500).json({ error: 'Lỗi khi truy xuất dữ liệu.' });
+    res.status(500).json({ data: {}, success: true, message: `Thêm sản phẩm ${sewingName} thất bại lúc ${timeLine}` });
   }
 }
 
@@ -73,7 +73,7 @@ async function thachPostPresentController(req, res) {
     }
   } catch (error) {
     console.error('Lỗi:', error);
-    res.status(500).json({ error: 'Thêm thất bại số nhân viên chuyền' });
+    res.status(500).json({ data: {}, success: false, message: `Thêm thất bại số nhân viên chuyền ${sewingName} ngày ${date}` });
   }
 }
 
