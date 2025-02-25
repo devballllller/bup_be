@@ -66,14 +66,14 @@ async function thachPostPresentController(req, res) {
       res.status(200).json({
         data: {},
         success: true,
-        message: 'Truy xuất thành công thông tin ngày phép nhân viên',
+        message: `Thêm thành công số nhân viên chuyền ${sewingName} ngày ${date}`,
       });
     } else {
-      res.status(404).json({ error: 'Không tìm thấy tên trong bảng tính22.' });
+      res.status(404).json({ data: {}, success: true, message: `Thêm thất bại số nhân viên chuyền ${sewingName} ngày ${date}` });
     }
   } catch (error) {
     console.error('Lỗi:', error);
-    res.status(500).json({ error: 'Lỗi khi truy xuất dữ liệu.' });
+    res.status(500).json({ error: 'Thêm thất bại số nhân viên chuyền' });
   }
 }
 
@@ -91,7 +91,7 @@ async function thachGetPresentController(req, res) {
       res.status(200).json({
         data,
         success: true,
-        message: 'Truy xuất thành công thông tin ngày phép nhân viên',
+        message: 'Thêm thành công số lượng nhân viên theo chuy',
       });
     } else {
       res.status(404).json({ error: 'Không tìm thấy tên trong bảng tính22.' });

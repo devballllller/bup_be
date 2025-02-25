@@ -49,7 +49,6 @@ async function getfilterProductNameThachServices(sewingName) {
 async function appendProductThachServices(sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails, dayTarget) {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(sewingName, productName, dayTarget, date, timeLine, actualValue, productReceive, productAccept, productFails, dayTarget);
       const data = await appendProductThach([sewingName, productName, dayTarget, date, timeLine, actualValue, productReceive, productAccept, productFails]);
       resolve(data);
     } catch (error) {
