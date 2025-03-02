@@ -27,10 +27,10 @@ async function authH(req, res) {
 //ATTENDANCE
 async function postAttendanceControllersH(req, res) {
   const { name, totalHour, typeHour } = req.body;
-
+  console.log(name, totalHour, typeHour);
   try {
     const data = await getAllAttendanceServicesCheckField();
-    console.log(data);
+    // console.log(data);
     const today = new Date();
     const dd = today.getDate();
     const mm = today.getMonth() + 1;
@@ -42,7 +42,7 @@ async function postAttendanceControllersH(req, res) {
     const formattedDate = `${dd}/${mm}/${yy}`;
     const formattedTime = `${hour}:${minutes}:${seconds}`;
 
-    console.log(formattedDate, formattedTime);
+    // console.log(formattedDate, formattedTime);
     let rowIndex = data.findIndex((row) => row[1] == name);
     if (rowIndex == -1) {
       console.log(`Không thể tìm thấy tên ${name} trong cột`);
@@ -56,11 +56,11 @@ async function postAttendanceControllersH(req, res) {
       return;
     }
     console.log(rowIndex, columnIndex);
-    let rangeTotalHour = `T${mm}!${String.fromCharCode(65 + columnIndex)}${rowIndex + parseInt(process.env.VALUE_STARTED)}`;
+    let rangeTotalHour = `T${mm}!${String.fromCharCode(65 + columnIndex)}${rowIndex + parseInt(process.env.VALUE_STARTED) + 1}`;
     console.log(rangeTotalHour, 'rangeTotalHour');
 
     await insertAttendance([totalHour], rangeTotalHour);
-    let rangeTypeHour = `T${mm}!${String.fromCharCode(65 + columnIndex)}${rowIndex + 1 + parseInt(process.env.VALUE_STARTED)}`;
+    let rangeTypeHour = `T${mm}!${String.fromCharCode(65 + columnIndex)}${rowIndex + 1 + parseInt(process.env.VALUE_STARTED) + 1}`;
     await insertAttendance([typeHour], rangeTypeHour);
     const logValue = `Đã chấm công vào lúc ${totalHour} tổng giờ là ${typeHour}`;
     console.log(name, logValue, formattedDate, formattedTime);

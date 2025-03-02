@@ -17,6 +17,7 @@ async function getAllAttendanceServicesCheckField() {
   return new Promise(async (resolve, reject) => {
     try {
       const data = await allUserCheckField();
+
       resolve(data);
     } catch (error) {
       reject(error);
