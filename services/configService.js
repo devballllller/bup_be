@@ -152,6 +152,10 @@ async function getPresentThach() {
   return await getSheetData('THACH_PRESENT_STATUS_GET');
 }
 
+async function getStyleThach() {
+  return await getSheetData('THACH_STYLE_HAT_GET');
+}
+
 module.exports = {
   insertTimekeeping,
   allTimekeeping,
@@ -170,4 +174,5 @@ module.exports = {
   appendProductThach,
   appendPresentThach,
   getPresentThach,
+  getStyleThach,
 };

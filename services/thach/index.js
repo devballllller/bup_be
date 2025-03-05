@@ -1,4 +1,4 @@
-const { appendProductThach, getAllProductThach, appendPresentThach, getPresentThach } = require('../configService');
+const { appendProductThach, getAllProductThach, appendPresentThach, getPresentThach, getStyleThach } = require('../configService');
 const { locationCell } = require('../../config/thach/locationCell');
 
 // lấy tất cả các sảm phẩm các chuyền
@@ -82,6 +82,19 @@ async function getPresentThachServices(sewingName, date) {
   });
 }
 
+// thêm sản phẩm vào
+async function getStyleThachServices(styleHat) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const data = await getStyleThach(styleHat);
+      console.log(data, 'getStyleThach');
+      resolve(data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 module.exports = {
   getPresentThachServices,
   appendPresentThachServices,
@@ -89,4 +102,5 @@ module.exports = {
   appendProductThachServices,
   getfilterProductThachServices,
   getfilterProductNameThachServices,
+  getStyleThachServices,
 };

@@ -13,6 +13,7 @@ const {
   getfilterProductNameThachController,
   thachPostPresentController,
   thachGetPresentController,
+  thachGetStyleController,
 } = require('../controllers/thach/index');
 
 const limiter = require('../middlewares/rateLimit');
@@ -66,5 +67,6 @@ router.post('/thach/get-present', thachGetPresentController);
 router.get('/thach/get-all-product', thachGetAllProductController);
 router.post('/thach/get-filter-product', thachGetFilterProductController);
 router.post('/thach/get-product-name', getfilterProductNameThachController);
+router.post('/thach/get-style', thachGetStyleController);
 
 module.exports = router;

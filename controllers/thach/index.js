@@ -6,6 +6,7 @@ const {
   getfilterProductNameThachServices,
   appendPresentThachServices,
   getPresentThachServices,
+  getStyleThachServices,
 } = require('../../services/thach/index');
 
 async function thachGetAllProductController(req, res) {
@@ -127,7 +128,7 @@ async function thachGetFilterProductController(req, res) {
   const { sewingName, date } = req.body;
   try {
     const data = await getfilterProductThachServices(sewingName, date);
-    console.log(data, 'sewingNameLocalsewingNameLocalsewingNameLocal');
+
     if (data) {
       res.status(200).json({
         data,
@@ -143,6 +144,26 @@ async function thachGetFilterProductController(req, res) {
   }
 }
 
+async function thachGetStyleController(req, res) {
+  const { styleHat } = req.body;
+  try {
+    const data = await getStyleThachServices(styleHat);
+
+    if (data) {
+      res.status(200).json({
+        data,
+        success: true,
+        message: 'Truy xuất thành công ảnh mũ mẫu',
+      });
+    } else {
+      res.status(404).json({ error: 'Truy xuất không thành công ảnh mũ mẫu' });
+    }
+  } catch (error) {
+    console.error('Lỗi:', error);
+    res.status(500).json({ error: 'Lỗi khi truy xuất ảnh mẫu.' });
+  }
+}
+
 module.exports = {
   thachGetPresentController,
   thachPostProductController,
@@ -150,4 +171,5 @@ module.exports = {
   thachGetFilterProductController,
   getfilterProductNameThachController,
   thachPostPresentController,
+  thachGetStyleController,
 };
