@@ -1,4 +1,3 @@
-const { cloudbilling_v1beta } = require('googleapis');
 const {
   appendProductThachServices,
   getAllProductThachServices,

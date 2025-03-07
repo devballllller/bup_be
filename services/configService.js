@@ -144,6 +144,11 @@ async function getAllProductThach() {
 async function appendProductThach(data) {
   return await appendData('THACH', data);
 }
+
+async function insertProductThach(values, range) {
+  return await updateData('THACH', values, range);
+}
+
 async function appendPresentThach(data) {
   return await appendData('THACH_PRESENT_STATUS', data);
 }
@@ -175,4 +180,5 @@ module.exports = {
   appendPresentThach,
   getPresentThach,
   getStyleThach,
+  insertProductThach,
 };
