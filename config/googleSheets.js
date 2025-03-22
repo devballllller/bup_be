@@ -18,6 +18,7 @@ const SHEETS_CONFIG = {
 
   THACH_INDEX: { id: '1iH5MjPSYG0YYqVyBMo2MxKvjZ1F7qKRQkEPNZ5pjaDQ', range: 'THACH!A1:AH10000' },
   THACH: { id: '1iH5MjPSYG0YYqVyBMo2MxKvjZ1F7qKRQkEPNZ5pjaDQ', range: 'THACH!A2:AH10000' },
+  THACH_BAO: { id: '19kkq6pjdQe6bIm9aq_MPpdVKJlntYRh0DLnlBvoBaKU', range: 'THACH!A2:AH10000' },
   THACH_PRESENT_STATUS: { id: '1iH5MjPSYG0YYqVyBMo2MxKvjZ1F7qKRQkEPNZ5pjaDQ', range: 'THACH_PRESENT_STATUS!A1:D10000' },
   THACH_PRESENT_STATUS_GET: { id: '1iH5MjPSYG0YYqVyBMo2MxKvjZ1F7qKRQkEPNZ5pjaDQ', range: 'THACH_PRESENT_STATUS!A2:D10000' },
   // THACH_STYLE_HAT_GET: { id: '1uVeau6HGBWyOdgIwwGsx0Lx84oB3gFPwrBz3-LNsx9k', range: 'SAMPLES!C6:D1000' },
@@ -30,6 +31,9 @@ const SHEETS_CONFIG = {
 
   // khác loài
   BI: { id: '1FZ03fq2DBjYKKTj-llK6Z3ddQhd1qGwdueIARwgWCKY', range: 'bi!A1:AH10000' },
+  BI_EMPLOY_INFO: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: 'EmployeeInformation!A4:G1000' },
+  BI_VPP: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: 'Stationary!A1:A1000' },
+  BI_REQUEST: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: 'Request!A2:H1000' },
 };
 
 // Hàm lấy client xác thực Google Sheets API

@@ -58,7 +58,7 @@ async function postAttendanceControllersH(req, res) {
     await insertAttendance([totalHour], rangeTotalHour);
     let rangeTypeHour = `T${mm}!${String.fromCharCode(65 + columnIndex)}${rowIndex + 1 + parseInt(process.env.VALUE_STARTED) + 1}`;
     await insertAttendance([typeHour], rangeTypeHour);
-    const logValue = `Đã chấm công vào lúc ${totalHour} tổng giờ là ${typeHour}`;
+    // const logValue = `Đã chấm công vào lúc ${totalHour} tổng giờ là ${typeHour}`;
 
     // await appendAttendance([name, logValue, formattedDate, formattedTime]);
 

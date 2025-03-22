@@ -5,7 +5,16 @@ const { getSendAllRequestController, getSendRequestController, postSendRequestCo
 const { getSendEmailController } = require('../controllers/email');
 const { uploadImage } = require('../controllers/image');
 const { getAllAttendanceControllersH, authH, postAttendanceControllersH, allSalaryHServicesControllersH } = require('../controllers/h/h');
-const { biPostEmployeeController } = require('../controllers/bi/index');
+const {
+  biPostEmployeeController,
+  biloginRequestController,
+  bilSimInfoController,
+  biGetAllVPPController,
+  biPostRequestVPPController,
+  biGetRequestVPPUserController,
+  biAcceptAdminController,
+  biGetAllRequestVPPController,
+} = require('../controllers/bi/index');
 const {
   thachPostProductController,
   thachGetAllProductController,
@@ -59,6 +68,14 @@ router.get('/H/get-all-salary', allSalaryHServicesControllersH);
 
 // -----------------------=> Bi
 router.post('/bi/post-employee', biPostEmployeeController);
+
+router.post('/bi/login-request', biloginRequestController);
+router.post('/bi/sim-info', bilSimInfoController); // LẤY TẤT THONG TIN SIM -> CHƯA XONG
+router.get('/bi/get-all-vpp', biGetAllVPPController); // lấy tất cả văn phòng phẩm
+router.post('/bi/request-vpp', biPostRequestVPPController); // gửi yêu cầu văn phòng phẩm
+router.post('/bi/get-vpp-request-user', biGetRequestVPPUserController); // lấy các yêu cầu vpp
+router.post('/bi/accept-admin', biAcceptAdminController); // duyệt yêu cầuu vpp
+router.get('/bi/get-all-vpprequest', biGetAllRequestVPPController); // duyệt yêu cầuu vpp
 
 // -----------------------=> THACH
 router.post('/thach/post-product', thachPostProductController);

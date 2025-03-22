@@ -135,10 +135,34 @@ async function sendRequestBI(data) {
   return await appendData('BI', data);
 }
 
+async function getAllUserBI() {
+  return await getSheetData('BI_EMPLOY_INFO');
+}
+
+async function getAllVPPBI() {
+  return await getSheetData('BI_VPP');
+}
+
+async function getAllVppRequest() {
+  return await getSheetData('BI_REQUEST');
+}
+
+async function postVpp(data) {
+  return await appendData('BI_REQUEST', data);
+}
+
+async function insertStatusVPP(values, range) {
+  return await updateData('BI_REQUEST', values, range);
+}
+
 // ----------------THACH
 
 async function getAllProductThach() {
   return await getSheetData('THACH');
+}
+
+async function getAllProductThachBao() {
+  return await getSheetData('THACH_BAO');
 }
 
 async function appendProductThach(data) {
@@ -181,4 +205,11 @@ module.exports = {
   getPresentThach,
   getStyleThach,
   insertProductThach,
+  getAllProductThachBao,
+  // BI
+  getAllUserBI,
+  getAllVPPBI,
+  postVpp,
+  getAllVppRequest,
+  insertStatusVPP,
 };

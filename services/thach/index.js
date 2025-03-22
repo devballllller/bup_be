@@ -1,4 +1,4 @@
-const { appendProductThach, getAllProductThach, appendPresentThach, getPresentThach, getStyleThach, insertProductThach } = require('../configService');
+const { appendProductThach, getAllProductThach, appendPresentThach, getPresentThach, getStyleThach, insertProductThach, getAllProductThachBao } = require('../configService');
 const { locationCell } = require('../../config/thach/locationCell');
 
 // lấy tất cả các sảm phẩm các chuyền
@@ -18,6 +18,8 @@ async function getfilterProductThachServices(sewingName, date) {
   return new Promise(async (resolve, reject) => {
     try {
       const rows = await getAllProductThach();
+
+      // const rows = await getAllProductThachBao();
       const data = rows.filter((row) => row[locationCell.SEWING_NAME] == sewingName && row[locationCell.DATE] == date);
       resolve(data);
     } catch (error) {
