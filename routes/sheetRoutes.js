@@ -14,6 +14,7 @@ const {
   biGetRequestVPPUserController,
   biAcceptAdminController,
   biGetAllRequestVPPController,
+  biGetAllUserControllers,
 } = require('../controllers/bi/index');
 const {
   thachPostProductController,
@@ -76,6 +77,7 @@ router.post('/bi/request-vpp', biPostRequestVPPController); // gửi yêu cầu 
 router.post('/bi/get-vpp-request-user', biGetRequestVPPUserController); // lấy các yêu cầu vpp
 router.post('/bi/accept-admin', biAcceptAdminController); // duyệt yêu cầuu vpp
 router.get('/bi/get-all-vpprequest', biGetAllRequestVPPController); // duyệt yêu cầuu vpp
+router.get('/bi/get-all-user', biGetAllUserControllers); // lất tất cả người dùng
 
 // -----------------------=> THACH
 router.post('/thach/post-product', thachPostProductController);

@@ -6,6 +6,7 @@ const {
   biGetRequestVPPUserSercvices,
   biAcceptAdminSercvices,
   biGetAllRequestVPPSercvices,
+  biGetAllUserSercvices,
 } = require('../../services/bi/index');
 
 // form huyền
@@ -189,6 +190,25 @@ async function biAcceptAdminController(req, res) {
     res.status(500).json({ error: 'Lỗi khi truy xuất dữ liệu.' });
   }
 }
+// lấy các người dùng
+async function biGetAllUserControllers(req, res) {
+  try {
+    const data = await biGetAllUserSercvices();
+
+    if (data) {
+      res.status(200).json({
+        data,
+        success: true,
+        message: 'Truy xuất thành công thông tin ngày phép nhân viên',
+      });
+    } else {
+      res.status(404).json({ error: 'Không tìm thấy tên trong bảng tính22.' });
+    }
+  } catch (error) {
+    console.error('Lỗi:', error);
+    res.status(500).json({ error: 'Lỗi khi truy xuất dữ liệu.' });
+  }
+}
 
 module.exports = {
   biPostEmployeeController,
@@ -199,4 +219,5 @@ module.exports = {
   biGetRequestVPPUserController,
   biAcceptAdminController,
   biGetAllRequestVPPController,
+  biGetAllUserControllers,
 };

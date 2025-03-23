@@ -1,6 +1,6 @@
-const { EmployeeInformationEnum } = require('../../constants/enumValue');
+const { EmployeeInformationEnum, EnumSim } = require('../../constants/enumValue');
 
-const { sendRequestBI, getAllUserBI, getAllVPPBI, postVpp, getAllVppRequest, insertStatusVPP } = require('../configService');
+const { sendRequestBI, getAllUserBI, getAllUserSimBI, getAllVPPBI, postVpp, getAllVppRequest, insertStatusVPP } = require('../configService');
 
 const enumRequest = {
   id: 0,
@@ -72,15 +72,61 @@ async function biloginRequestSercvices(phone) {
 
     const dataRaw = response.filter((els) => els[EmployeeInformationEnum.PHONE] == phone);
 
-    const data = {
-      name: dataRaw[0][EmployeeInformationEnum.NAME],
-      phone: dataRaw[0][EmployeeInformationEnum.PHONE],
-    };
-
+    let data = [];
+    if (dataRaw.length > 0) {
+      data = {
+        employeeId: dataRaw[0][EmployeeInformationEnum.EMPLOYEEID] || '',
+        name: dataRaw[0][EmployeeInformationEnum.NAME] || '',
+        department: dataRaw[0][EmployeeInformationEnum.DEPARTMENT] || '',
+        hiredate: dataRaw[0][EmployeeInformationEnum.HIREDATE] || '',
+        workingstatus: dataRaw[0][EmployeeInformationEnum.WORKINGSTATUS] || '',
+        phone: dataRaw[0][EmployeeInformationEnum.PHONE] || '',
+        packagec: dataRaw[0][EmployeeInformationEnum.PACKAGEC] || '',
+        packageuse: dataRaw[0][EmployeeInformationEnum.PACKAGE_USE] || '',
+        esimsim: dataRaw[0][EmployeeInformationEnum.ESIM_SIM] || '',
+        sn: dataRaw[0][EmployeeInformationEnum.SN] || '',
+        gmail: dataRaw[0][EmployeeInformationEnum.GMAIL] || '',
+        mb_vt: dataRaw[0][EmployeeInformationEnum.MB_VT] || '',
+        dayactive: dataRaw[0][EmployeeInformationEnum.DAY_ACTIVE] || '',
+      };
+    }
+    console.log(data);
     return data;
   } catch (error) {
     console.error(error);
     throw error; // Ném lỗi để hàm gọi có thể xử lý
+  }
+}
+
+// lấy tất cả người dùng
+async function biGetAllUserSercvices(phone) {
+  try {
+    let data = await getAllUserBI();
+
+    if (data.length > 0) {
+      data = data.map((els) => {
+        return {
+          employeeId: els[EmployeeInformationEnum.EMPLOYEEID] || '',
+          name: els[EmployeeInformationEnum.NAME] || '',
+          department: els[EmployeeInformationEnum.DEPARTMENT] || '',
+          hiredate: els[EmployeeInformationEnum.HIREDATE] || '',
+          workingstatus: els[EmployeeInformationEnum.WORKINGSTATUS] || '',
+          phone: els[EmployeeInformationEnum.PHONE] || '',
+          packagec: els[EmployeeInformationEnum.PACKAGEC] || '',
+          packageuse: els[EmployeeInformationEnum.PACKAGE_USE] || '',
+          esimsim: els[EmployeeInformationEnum.ESIM_SIM] || '',
+          sn: els[EmployeeInformationEnum.SN] || '',
+          gmail: els[EmployeeInformationEnum.GMAIL] || '',
+          mb_vt: els[EmployeeInformationEnum.MB_VT] || '',
+          dayactive: els[EmployeeInformationEnum.DAY_ACTIVE] || '',
+        };
+      });
+    }
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 }
 
@@ -141,19 +187,17 @@ async function biGetRequestVPPUserSercvices(phone) {
   try {
     const response = await getAllVppRequest();
 
-    const data = response.map((els) => {
-      if (els[enumRequest.phone] == phone) {
-        return {
-          id: els[enumRequest.id],
-          name: els[enumRequest.name],
-          phone: els[enumRequest.phone],
-          vppname: els[enumRequest.vppname],
-          vppnumber: els[enumRequest.vppnumber],
-          daysend: els[enumRequest.daysend],
-          status: els[enumRequest.status],
-        };
-      }
-    });
+    const data = response
+      .filter((els) => els[enumRequest.phone] === phone)
+      .map((els) => ({
+        id: els[enumRequest.id],
+        name: els[enumRequest.name],
+        phone: els[enumRequest.phone],
+        vppname: els[enumRequest.vppname],
+        vppnumber: els[enumRequest.vppnumber],
+        daysend: els[enumRequest.daysend],
+        status: els[enumRequest.status],
+      }));
 
     return data;
   } catch (error) {
@@ -187,4 +231,5 @@ module.exports = {
   biGetRequestVPPUserSercvices,
   biAcceptAdminSercvices,
   biGetAllRequestVPPSercvices,
+  biGetAllUserSercvices,
 };
