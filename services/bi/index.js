@@ -10,6 +10,7 @@ const enumRequest = {
   vppnumber: 4,
   daysend: 5,
   status: 6,
+  reason: 7,
 };
 
 const status = 'Chờ duyệt';
@@ -137,7 +138,18 @@ async function biGetAllVPPSercvices() {
 
     const data = response.flat();
 
-    return data;
+    const data1 = [];
+    const data2 = [];
+
+    for (let i = 0; i < data.length; i++) {
+      if (i % 2 === 1) {
+        data1.push(data[i]);
+      } else {
+        data2.push(data[i]);
+      }
+    }
+
+    return { data, data1, data2 };
   } catch (error) {
     console.error(error);
     throw error;
@@ -186,7 +198,9 @@ async function biPostRequestVPPSercvices(id, name, phone, vppname, vppnumber, da
 async function biGetRequestVPPUserSercvices(phone) {
   try {
     const response = await getAllVppRequest();
+    // const allStationary = await getAllUserSimBI();
 
+    console.log(response, '------------');
     const data = response
       .filter((els) => els[enumRequest.phone] === phone)
       .map((els) => ({
@@ -197,6 +211,7 @@ async function biGetRequestVPPUserSercvices(phone) {
         vppnumber: els[enumRequest.vppnumber],
         daysend: els[enumRequest.daysend],
         status: els[enumRequest.status],
+        reason: els[enumRequest.reason],
       }));
 
     return data;
@@ -206,8 +221,8 @@ async function biGetRequestVPPUserSercvices(phone) {
   }
 }
 
-//lấy yêu cầu vpp bởi phone
-async function biAcceptAdminSercvices(id, status) {
+//duyệt yêu cầu vpp
+async function biAcceptAdminSercvices(id, status, reason) {
   try {
     const response = await getAllVppRequest();
 
@@ -215,7 +230,8 @@ async function biAcceptAdminSercvices(id, status) {
 
     let range = `Request!${String.fromCharCode(65 + Number(enumRequest.status))}${indexRow + 2}`;
 
-    await insertStatusVPP([status], range);
+    console.log(id, status, reason);
+    await insertStatusVPP([status, reason], range);
     return [];
   } catch (error) {
     console.error(error);

@@ -90,11 +90,15 @@ async function bilSimInfoController(req, res) {
 // lấy tất cả vpp  ở sheet Stationary
 async function biGetAllVPPController(req, res) {
   try {
-    const data = await biGetAllVPPSercvices();
+    const { data, data1, data2 } = await biGetAllVPPSercvices();
 
     if (data) {
       res.status(200).json({
-        data,
+        data: {
+          data,
+          data1,
+          data2,
+        },
         success: true,
         message: 'Truy xuất thành công thông tin ngày phép nhân viên',
       });
@@ -172,9 +176,9 @@ async function biGetRequestVPPUserController(req, res) {
 }
 // lấy các yêu cầu vpp  ở sheet Stationary
 async function biAcceptAdminController(req, res) {
-  const { id, status } = req.body;
+  const { id, status, reason } = req.body;
   try {
-    const data = await biAcceptAdminSercvices(id, status);
+    const data = await biAcceptAdminSercvices(id, status, reason);
 
     if (data) {
       res.status(200).json({

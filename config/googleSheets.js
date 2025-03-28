@@ -32,8 +32,8 @@ const SHEETS_CONFIG = {
   // khác loài
   BI: { id: '1FZ03fq2DBjYKKTj-llK6Z3ddQhd1qGwdueIARwgWCKY', range: 'bi!A1:AH10000' },
   BI_EMPLOY_INFO: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: 'SIM!A5:N1000' },
-  BI_VPP: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: 'Stationary!A1:A1000' },
-  BI_REQUEST: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: 'Request!A2:H1000' },
+  BI_VPP: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: 'Stationary!A3:B1000' },
+  BI_REQUEST: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: 'Request!A2:I1000' },
 };
 
 // Hàm lấy client xác thực Google Sheets API
