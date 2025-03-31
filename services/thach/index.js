@@ -48,7 +48,7 @@ async function getfilterProductNameThachServices(sewingName) {
 }
 
 // thêm sản phẩm vào
-async function appendProductThachServices(sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails, dayTarget) {
+async function appendProductThachServices(sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails, dayTarget, timeStampValue) {
   return new Promise(async (resolve, reject) => {
     try {
       const allDataProduct = await getAllProductThach();
@@ -56,10 +56,10 @@ async function appendProductThachServices(sewingName, productName, date, timeLin
       const dataFilter = allDataProduct.findIndex((els) => els[0] == sewingName && els[3] == date && els[4] == timeLine);
 
       if (dataFilter == -1) {
-        await appendProductThach([sewingName, productName, dayTarget, date, timeLine, actualValue, productReceive, productAccept, productFails]);
+        await appendProductThach([sewingName, productName, dayTarget, date, timeLine, actualValue, productReceive, productAccept, productFails, timeStampValue]);
       } else {
         const rangeInsert = `THACH!A${dataFilter + 2}`;
-        await insertProductThach([sewingName, productName, dayTarget, date, timeLine, actualValue, productReceive, productAccept, productFails], rangeInsert);
+        await insertProductThach([sewingName, productName, dayTarget, date, timeLine, actualValue, productReceive, productAccept, productFails, timeStampValue], rangeInsert);
       }
       resolve({
         data: {},

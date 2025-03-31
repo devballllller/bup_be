@@ -176,9 +176,9 @@ async function biGetRequestVPPUserController(req, res) {
 }
 // lấy các yêu cầu vpp  ở sheet Stationary
 async function biAcceptAdminController(req, res) {
-  const { id, status, reason } = req.body;
+  const { id, status, reason, name, number } = req.body;
   try {
-    const data = await biAcceptAdminSercvices(id, status, reason);
+    const data = await biAcceptAdminSercvices(id, status, reason, name, number);
 
     if (data) {
       res.status(200).json({

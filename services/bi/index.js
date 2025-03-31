@@ -1,6 +1,6 @@
 const { EmployeeInformationEnum, EnumSim } = require('../../constants/enumValue');
 
-const { sendRequestBI, getAllUserBI, getAllUserSimBI, getAllVPPBI, postVpp, getAllVppRequest, insertStatusVPP } = require('../configService');
+const { sendRequestBI, getAllUserBI, getAllVPPBI, postVpp, getAllVppRequest, insertStatusVPP } = require('../configService');
 
 const enumRequest = {
   id: 0,
@@ -11,6 +11,11 @@ const enumRequest = {
   daysend: 5,
   status: 6,
   reason: 7,
+};
+
+const enumStationary = {
+  type: 0,
+  number: 1,
 };
 
 const status = 'Chờ duyệt';
@@ -198,9 +203,7 @@ async function biPostRequestVPPSercvices(id, name, phone, vppname, vppnumber, da
 async function biGetRequestVPPUserSercvices(phone) {
   try {
     const response = await getAllVppRequest();
-    // const allStationary = await getAllUserSimBI();
 
-    console.log(response, '------------');
     const data = response
       .filter((els) => els[enumRequest.phone] === phone)
       .map((els) => ({
@@ -222,16 +225,27 @@ async function biGetRequestVPPUserSercvices(phone) {
 }
 
 //duyệt yêu cầu vpp
-async function biAcceptAdminSercvices(id, status, reason) {
+async function biAcceptAdminSercvices(id, status, reason, name, number) {
   try {
     const response = await getAllVppRequest();
+    const { data, data1, data2 } = await biGetAllVPPSercvices();
 
     const indexRow = response.findIndex((item) => item[enumRequest.id] === id);
 
     let range = `Request!${String.fromCharCode(65 + Number(enumRequest.status))}${indexRow + 2}`;
 
-    console.log(id, status, reason);
     await insertStatusVPP([status, reason], range);
+
+    for (let i = 0; i < data.length; i++) {
+      if (data[i] == name) {
+        const valueAdd = Number(data[i + 1]) + Number(number);
+        const indexRow1 = data2.findIndex((els) => els == name);
+
+        let range = `Stationary!${String.fromCharCode(65 + Number(enumStationary.number))}${indexRow1 + 2}`;
+        console.log(range, '123123', indexRow1);
+      }
+    }
+
     return [];
   } catch (error) {
     console.error(error);
