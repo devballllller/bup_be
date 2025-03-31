@@ -28,13 +28,14 @@ async function thachGetAllProductController(req, res) {
 }
 
 async function thachPostProductController(req, res) {
-  const { sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails, dayTarget, timeStampValue } = req.body;
+  const { sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails, dayTarget } = req.body;
 
   if (!sewingName) {
     return res.status(400).json({ error: 'Tên không được phép rỗng.' });
   }
 
   try {
+    const timeStampValue = new Date().toLocaleString();
     const rows = await appendProductThachServices(sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails, dayTarget, timeStampValue);
 
     if (rows) {
