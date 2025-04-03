@@ -9,9 +9,11 @@ const EmployeeInformationEnum = {
   GMAIL: 8,
   DAY_ACTIVE: 9,
   PACKAGEC: 10,
-  PACKAGE_USE: 10,
-  ESIM_SIM: 11,
-  SN: 12,
+  PACKAGE_USE: 11,
+  ESIM_SIM: 12,
+  SN: 13,
+  ADDFEE: 14,
+  PAYTIME: 15,
 };
 
 const EnumSim = {
@@ -29,4 +31,32 @@ const EnumSim = {
   QR_CODE_IMAGE: 11,
 };
 
-module.exports = { EmployeeInformationEnum, EnumSim };
+// biii
+const nameOfField = {
+  Stationaries: 'Stationaries',
+  RequestStationary: 'RequestStationary',
+  Uniform: 'Uniform',
+  RequestUniform: 'RequestUniform',
+  RequestUniform: 'RequestUniform',
+  Devices: 'Devices',
+  RequestDevies: 'RequestDevies',
+};
+
+const enumRequest = {
+  id: 0,
+  name: 1,
+  phone: 2,
+  vppname: 3,
+  vppnumber: 4,
+  daysend: 5,
+  status: 6,
+  reason: 7,
+  type: 8,
+};
+
+const enumStationary = {
+  type: 0,
+  stock: 1,
+  actual: 2,
+};
+module.exports = { EmployeeInformationEnum, EnumSim, enumRequest, enumStationary, nameOfField };

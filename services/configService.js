@@ -143,6 +143,26 @@ async function getAllVPPBI() {
   return await getSheetData('BI_VPP');
 }
 
+async function insertVPPBI(values, range) {
+  return await updateData('BI_VPP', values, range);
+}
+
+async function getAllUNFBI() {
+  return await getSheetData('BI_UNIFORM');
+}
+
+async function insertUNFBI(values, range) {
+  return await updateData('BI_UNIFORM', values, range);
+}
+
+async function getAllDVEBI() {
+  return await getSheetData('BI_DEVICE');
+}
+
+async function insertDVEBI(values, range) {
+  return await updateData('BI_DEVICE', values, range);
+}
+
 async function getAllVppRequest() {
   return await getSheetData('BI_REQUEST');
 }
@@ -209,7 +229,12 @@ module.exports = {
   // BI
   getAllUserBI,
   getAllVPPBI,
+  insertVPPBI,
   postVpp,
   getAllVppRequest,
   insertStatusVPP,
+  getAllUNFBI,
+  insertUNFBI,
+  getAllDVEBI,
+  insertDVEBI,
 };

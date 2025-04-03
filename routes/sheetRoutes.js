@@ -10,6 +10,8 @@ const {
   biloginRequestController,
   bilSimInfoController,
   biGetAllVPPController,
+  biGetAllUniformController,
+  biGetAllDevicesController,
   biPostRequestVPPController,
   biGetRequestVPPUserController,
   biAcceptAdminController,
@@ -73,6 +75,8 @@ router.post('/bi/post-employee', biPostEmployeeController);
 router.post('/bi/login-request', biloginRequestController);
 router.post('/bi/sim-info', bilSimInfoController); // LẤY TẤT THONG TIN SIM -> CHƯA XONG
 router.get('/bi/get-all-vpp', biGetAllVPPController); // lấy tất cả văn phòng phẩm
+router.get('/bi/get-all-form', biGetAllUniformController); // lấy tất cả văn phòng phẩm
+router.get('/bi/get-all-device', biGetAllDevicesController); // lấy tất cả văn phòng phẩm
 router.post('/bi/request-vpp', biPostRequestVPPController); // gửi yêu cầu văn phòng phẩm
 router.post('/bi/get-vpp-request-user', biGetRequestVPPUserController); // lấy các yêu cầu vpp
 router.post('/bi/accept-admin', biAcceptAdminController); // duyệt yêu cầuu vpp

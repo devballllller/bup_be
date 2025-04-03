@@ -1,22 +1,18 @@
-const { EmployeeInformationEnum, EnumSim } = require('../../constants/enumValue');
+const { EmployeeInformationEnum, enumRequest, enumStationary, nameOfField } = require('../../constants/enumValue');
 
-const { sendRequestBI, getAllUserBI, getAllVPPBI, postVpp, getAllVppRequest, insertStatusVPP } = require('../configService');
-
-const enumRequest = {
-  id: 0,
-  name: 1,
-  phone: 2,
-  vppname: 3,
-  vppnumber: 4,
-  daysend: 5,
-  status: 6,
-  reason: 7,
-};
-
-const enumStationary = {
-  type: 0,
-  number: 1,
-};
+const {
+  sendRequestBI,
+  getAllUserBI,
+  getAllVPPBI,
+  postVpp,
+  getAllVppRequest,
+  insertStatusVPP,
+  insertVPPBI,
+  getAllUNFBI,
+  insertUNFBI,
+  getAllDVEBI,
+  insertDVEBI,
+} = require('../configService');
 
 const status = 'Chờ duyệt';
 const statusAccept = 'Duyệt';
@@ -105,7 +101,7 @@ async function biloginRequestSercvices(phone) {
 }
 
 // lấy tất cả người dùng
-async function biGetAllUserSercvices(phone) {
+async function biGetAllUserSercvices() {
   try {
     let data = await getAllUserBI();
 
@@ -118,13 +114,15 @@ async function biGetAllUserSercvices(phone) {
           hiredate: els[EmployeeInformationEnum.HIREDATE] || '',
           workingstatus: els[EmployeeInformationEnum.WORKINGSTATUS] || '',
           phone: els[EmployeeInformationEnum.PHONE] || '',
+          gmail: els[EmployeeInformationEnum.GMAIL] || '',
+          mb_vt: els[EmployeeInformationEnum.MB_VT] || '',
+          dayactive: els[EmployeeInformationEnum.DAY_ACTIVE] || '',
           packagec: els[EmployeeInformationEnum.PACKAGEC] || '',
           packageuse: els[EmployeeInformationEnum.PACKAGE_USE] || '',
           esimsim: els[EmployeeInformationEnum.ESIM_SIM] || '',
           sn: els[EmployeeInformationEnum.SN] || '',
-          gmail: els[EmployeeInformationEnum.GMAIL] || '',
-          mb_vt: els[EmployeeInformationEnum.MB_VT] || '',
-          dayactive: els[EmployeeInformationEnum.DAY_ACTIVE] || '',
+          addFee: els[EmployeeInformationEnum.ADDFEE] || '',
+          payTime: els[EmployeeInformationEnum.PAYTIME] || '',
         };
       });
     }
@@ -145,28 +143,84 @@ async function biGetAllVPPSercvices() {
 
     const data1 = [];
     const data2 = [];
+    const data3 = [];
 
     for (let i = 0; i < data.length; i++) {
-      if (i % 2 === 1) {
+      if (i % 3 === 0) {
         data1.push(data[i]);
-      } else {
+      } else if (i % 3 === 1) {
         data2.push(data[i]);
+      } else {
+        data3.push(data[i]);
       }
     }
 
-    return { data, data1, data2 };
+    return { data, data1, data2, data3 };
   } catch (error) {
     console.error(error);
     throw error;
   }
 }
 
+// lấy các thiết bị
+async function biGetAllDevicesSercvices() {
+  try {
+    const response = await getAllDVEBI();
+
+    const data = response.flat();
+
+    const data1 = [];
+    const data2 = [];
+    const data3 = [];
+
+    for (let i = 0; i < data.length; i++) {
+      if (i % 3 === 0) {
+        data1.push(data[i]);
+      } else if (i % 3 === 1) {
+        data2.push(data[i]);
+      } else {
+        data3.push(data[i]);
+      }
+    }
+
+    return { data, data1, data2, data3 };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+// lấy các đồng phục
+async function biGetAllUniformSercvices() {
+  try {
+    const response = await getAllUNFBI();
+
+    const data = response.flat();
+
+    const data1 = [];
+    const data2 = [];
+    const data3 = [];
+
+    for (let i = 0; i < data.length; i++) {
+      if (i % 3 === 0) {
+        data1.push(data[i]);
+      } else if (i % 3 === 1) {
+        data2.push(data[i]);
+      } else {
+        data3.push(data[i]);
+      }
+    }
+
+    return { data, data1, data2, data3 };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 // lấy các yêu cầu vpp
 async function biGetAllRequestVPPSercvices() {
   try {
     const response = await getAllVppRequest();
-
-    const data = response.map((els) => {
+    let data = response.map((els) => {
       return {
         id: els[enumRequest.id],
         name: els[enumRequest.name],
@@ -178,6 +232,8 @@ async function biGetAllRequestVPPSercvices() {
       };
     });
 
+    data = data.filter((els) => els.status == 'Chờ duyệt');
+
     return data;
   } catch (error) {
     console.error(error);
@@ -186,9 +242,9 @@ async function biGetAllRequestVPPSercvices() {
 }
 
 //gửi yêu cầu vpp
-async function biPostRequestVPPSercvices(id, name, phone, vppname, vppnumber, daysend) {
+async function biPostRequestVPPSercvices(id, name, phone, vppname, vppnumber, daysend, type) {
   try {
-    const requestdATA = [id, name, phone, vppname, vppnumber, daysend, status];
+    const requestdATA = [id, name, phone, vppname, vppnumber, daysend, status, '', type];
     console.log(requestdATA);
     const response = await postVpp(requestdATA);
 
@@ -200,12 +256,12 @@ async function biPostRequestVPPSercvices(id, name, phone, vppname, vppnumber, da
 }
 
 //lấy yêu cầu vpp bởi phone
-async function biGetRequestVPPUserSercvices(phone) {
+async function biGetRequestVPPUserSercvices(phone, type) {
   try {
     const response = await getAllVppRequest();
-
+    console.log(phone, type);
     const data = response
-      .filter((els) => els[enumRequest.phone] === phone)
+      .filter((els) => els[enumRequest.phone] === phone && els[enumRequest.type] === type)
       .map((els) => ({
         id: els[enumRequest.id],
         name: els[enumRequest.name],
@@ -226,23 +282,45 @@ async function biGetRequestVPPUserSercvices(phone) {
 
 //duyệt yêu cầu vpp
 async function biAcceptAdminSercvices(id, status, reason, name, number) {
+  console.log(id, status, reason, name, number, 'id, status, reason, name, number');
   try {
     const response = await getAllVppRequest();
-    const { data, data1, data2 } = await biGetAllVPPSercvices();
+    const { data, data1, data2, data3 } = await biGetAllVPPSercvices();
 
     const indexRow = response.findIndex((item) => item[enumRequest.id] === id);
 
-    let range = `Request!${String.fromCharCode(65 + Number(enumRequest.status))}${indexRow + 2}`;
+    let range = `${nameOfField.RequestStationary}!${String.fromCharCode(65 + Number(enumRequest.status))}${indexRow + 2}`;
 
     await insertStatusVPP([status, reason], range);
 
-    for (let i = 0; i < data.length; i++) {
-      if (data[i] == name) {
-        const valueAdd = Number(data[i + 1]) + Number(number);
-        const indexRow1 = data2.findIndex((els) => els == name);
+    if (status != 'Từ chối') {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i] == name) {
+          const indexRow1 = data1.findIndex((els) => els == name);
 
-        let range = `Stationary!${String.fromCharCode(65 + Number(enumStationary.number))}${indexRow1 + 2}`;
-        console.log(range, '123123', indexRow1);
+          let range1 = `${nameOfField.Stationaries}!${String.fromCharCode(65 + Number(enumStationary.stock))}${indexRow1 + 2}`;
+
+          console.log(indexRow1);
+          const stock = Number(data2[indexRow1]) - Number(number);
+          const actual = Number(data3[indexRow1]) + Number(number);
+
+          console.log(Number(data2[indexRow1]), Number(data3[indexRow1]), 'stock, actual');
+          await insertVPPBI([stock, actual], range1);
+        }
+      }
+      for (let i = 0; i < data.length; i++) {
+        if (data[i] == name) {
+          const indexRow1 = data1.findIndex((els) => els == name);
+
+          let range1 = `${nameOfField.Stationaries}!${String.fromCharCode(65 + Number(enumStationary.stock))}${indexRow1 + 2}`;
+
+          console.log(indexRow1);
+          const stock = Number(data2[indexRow1]) - Number(number);
+          const actual = Number(data3[indexRow1]) + Number(number);
+
+          console.log(Number(data2[indexRow1]), Number(data3[indexRow1]), 'stock, actual');
+          await insertVPPBI([stock, actual], range1);
+        }
       }
     }
 
@@ -262,4 +340,6 @@ module.exports = {
   biAcceptAdminSercvices,
   biGetAllRequestVPPSercvices,
   biGetAllUserSercvices,
+  biGetAllDevicesSercvices,
+  biGetAllUniformSercvices,
 };

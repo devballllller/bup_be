@@ -1,6 +1,6 @@
 const { google } = require('googleapis');
 const path = require('path');
-
+const { nameOfField } = require('../constants/enumValue');
 const sheets = google.sheets('v4');
 const KEY_FILE_PATH = path.join(__dirname, '../subtle-lambda-438005-m6-9c5ab8ef5764.json');
 
@@ -31,9 +31,12 @@ const SHEETS_CONFIG = {
 
   // khác loài
   BI: { id: '1FZ03fq2DBjYKKTj-llK6Z3ddQhd1qGwdueIARwgWCKY', range: 'bi!A1:AH10000' },
-  BI_EMPLOY_INFO: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: 'SIM!A5:N1000' },
-  BI_VPP: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: 'Stationary!A3:B1000' },
-  BI_REQUEST: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: 'Request!A2:I1000' },
+  BI_EMPLOY_INFO: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: 'SIM!A5:P1000' },
+  BI_VPP: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: `${nameOfField.Stationaries}!A2:C1000` },
+  BI_REQUEST: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: `${nameOfField.RequestStationary}!A2:J1000` },
+
+  BI_DEVICE: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: `${nameOfField.Uniform}!A2:C1000` },
+  BI_UNIFORM: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: `${nameOfField.Devices}!A2:C1000` },
 };
 
 // Hàm lấy client xác thực Google Sheets API

@@ -7,6 +7,8 @@ const {
   biAcceptAdminSercvices,
   biGetAllRequestVPPSercvices,
   biGetAllUserSercvices,
+  biGetAllDevicesSercvices,
+  biGetAllUniformSercvices,
 } = require('../../services/bi/index');
 
 // form huyền
@@ -110,6 +112,53 @@ async function biGetAllVPPController(req, res) {
     res.status(500).json({ error: 'Lỗi khi truy xuất dữ liệu.' });
   }
 }
+// lấy tất cả đồng phục  ở sheet uniform
+async function biGetAllUniformController(req, res) {
+  try {
+    const { data, data1, data2 } = await biGetAllUniformSercvices();
+
+    if (data) {
+      res.status(200).json({
+        data: {
+          data,
+          data1,
+          data2,
+        },
+        success: true,
+        message: 'Truy xuất thành công thông tin ngày phép nhân viên',
+      });
+    } else {
+      res.status(404).json({ error: 'Không tìm thấy tên trong bảng tính22.' });
+    }
+  } catch (error) {
+    console.error('Lỗi:', error);
+    res.status(500).json({ error: 'Lỗi khi truy xuất dữ liệu.' });
+  }
+}
+
+// lấy tất cả thiết bị ở sheet devices
+async function biGetAllDevicesController(req, res) {
+  try {
+    const { data, data1, data2 } = await biGetAllDevicesSercvices();
+
+    if (data) {
+      res.status(200).json({
+        data: {
+          data,
+          data1,
+          data2,
+        },
+        success: true,
+        message: 'Truy xuất thành công thông tin ngày phép nhân viên',
+      });
+    } else {
+      res.status(404).json({ error: 'Không tìm thấy tên trong bảng tính22.' });
+    }
+  } catch (error) {
+    console.error('Lỗi:', error);
+    res.status(500).json({ error: 'Lỗi khi truy xuất dữ liệu.' });
+  }
+}
 
 // lấy tất cả yêu cầu vpp
 async function biGetAllRequestVPPController(req, res) {
@@ -132,13 +181,13 @@ async function biGetAllRequestVPPController(req, res) {
 }
 // gửi yêu cầu vpp  ở sheet Stationary
 async function biPostRequestVPPController(req, res) {
-  const { name, phone, vppname, vppnumber, daysend } = req.body;
+  const { name, phone, vppname, vppnumber, daysend, type } = req.body;
 
   const randomString = Math.random().toString(36).substring(2, 8);
   const uuid = `${daysend}-${phone}-${randomString}`;
 
   try {
-    const data = await biPostRequestVPPSercvices(uuid, name, phone, vppname, vppnumber, daysend);
+    const data = await biPostRequestVPPSercvices(uuid, name, phone, vppname, vppnumber, daysend, type);
 
     if (data) {
       res.status(200).json({
@@ -156,9 +205,9 @@ async function biPostRequestVPPController(req, res) {
 }
 // lấy các yêu cầu vpp  ở sheet Stationary
 async function biGetRequestVPPUserController(req, res) {
-  const { phone } = req.body;
+  const { phone, type } = req.body;
   try {
-    const data = await biGetRequestVPPUserSercvices(phone);
+    const data = await biGetRequestVPPUserSercvices(phone, type);
 
     if (data) {
       res.status(200).json({
@@ -224,4 +273,6 @@ module.exports = {
   biAcceptAdminController,
   biGetAllRequestVPPController,
   biGetAllUserControllers,
+  biGetAllUniformController,
+  biGetAllDevicesController,
 };
