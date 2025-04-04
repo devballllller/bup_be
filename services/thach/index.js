@@ -101,15 +101,17 @@ async function getPresentThachServices(sewingName, date) {
 async function getStyleThachServices(styleHat) {
   return new Promise(async (resolve, reject) => {
     try {
-      const data = await getStyleThach(styleHat);
+      let data = await getStyleThach();
 
+      data = data.filter((els) => els[0] == styleHat);
+
+      data = { imageLink: data[0][1] };
       resolve(data);
     } catch (error) {
       reject(error);
     }
   });
 }
-
 module.exports = {
   getPresentThachServices,
   appendPresentThachServices,

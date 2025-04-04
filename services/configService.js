@@ -11,6 +11,7 @@ async function getSheetData(sheetKey) {
       auth,
       spreadsheetId: SHEETS_CONFIG[sheetKey].id,
       range: SHEETS_CONFIG[sheetKey].range,
+      valueRenderOption: 'FORMULA',
     });
 
     if (!res.data || !res.data.values) {
