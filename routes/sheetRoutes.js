@@ -26,6 +26,7 @@ const {
   thachPostPresentController,
   thachGetPresentController,
   thachGetStyleController,
+  thachPostTargetController,
 } = require('../controllers/thach/index');
 
 const limiter = require('../middlewares/rateLimit');
@@ -91,5 +92,6 @@ router.get('/thach/get-all-product', thachGetAllProductController);
 router.post('/thach/get-filter-product', thachGetFilterProductController);
 router.post('/thach/get-product-name', getfilterProductNameThachController);
 router.post('/thach/get-style', thachGetStyleController);
+router.post('/thach/post-target-day-line', thachPostTargetController);
 
 module.exports = router;

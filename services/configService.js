@@ -206,6 +206,13 @@ async function getStyleThach() {
   return await getSheetData('THACH_STYLE_HAT_GET');
 }
 
+async function getTargetThach() {
+  return await getSheetData('THACH_TARGET');
+}
+
+async function appendTargetThach(data) {
+  return await appendData('THACH_TARGET', data);
+}
 module.exports = {
   insertTimekeeping,
   allTimekeeping,
@@ -227,6 +234,9 @@ module.exports = {
   getStyleThach,
   insertProductThach,
   getAllProductThachBao,
+  getTargetThach,
+  appendTargetThach,
+
   // BI
   getAllUserBI,
   getAllVPPBI,

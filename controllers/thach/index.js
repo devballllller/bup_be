@@ -1,3 +1,4 @@
+const { getTargetThach } = require('../../services/configService');
 const {
   appendProductThachServices,
   getAllProductThachServices,
@@ -6,6 +7,8 @@ const {
   appendPresentThachServices,
   getPresentThachServices,
   getStyleThachServices,
+  thachPostTargetServices,
+  getTargetThachServices,
 } = require('../../services/thach/index');
 
 async function thachGetAllProductController(req, res) {
@@ -28,7 +31,7 @@ async function thachGetAllProductController(req, res) {
 }
 
 async function thachPostProductController(req, res) {
-  const { sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails, dayTarget } = req.body;
+  const { sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails } = req.body;
 
   if (!sewingName) {
     return res.status(400).json({ error: 'Tên không được phép rỗng.' });
@@ -36,6 +39,8 @@ async function thachPostProductController(req, res) {
 
   try {
     const timeStampValue = new Date().toLocaleString();
+    const dayTarget = await getTargetThachServices(sewingName, date);
+
     const rows = await appendProductThachServices(sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails, dayTarget, timeStampValue);
 
     if (rows) {
@@ -164,6 +169,29 @@ async function thachGetStyleController(req, res) {
   }
 }
 
+async function thachPostTargetController(req, res) {
+  const { line, date, dayTarget } = req.body;
+
+  try {
+    const timeStampValue = new Date().toLocaleString();
+
+    const data = await thachPostTargetServices(line, date, dayTarget, timeStampValue);
+
+    if (data) {
+      res.status(200).json({
+        data,
+        success: true,
+        message: 'Truy xuất thành công ảnh mũ mẫu',
+      });
+    } else {
+      res.status(404).json({ error: 'Truy xuất không thành công ảnh mũ mẫu' });
+    }
+  } catch (error) {
+    console.error('Lỗi:', error);
+    res.status(500).json({ error: 'Lỗi khi truy xuất ảnh mẫu.' });
+  }
+}
+
 module.exports = {
   thachGetPresentController,
   thachPostProductController,
@@ -172,4 +200,5 @@ module.exports = {
   getfilterProductNameThachController,
   thachPostPresentController,
   thachGetStyleController,
+  thachPostTargetController,
 };

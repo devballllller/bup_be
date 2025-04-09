@@ -1,5 +1,16 @@
-const { appendProductThach, getAllProductThach, appendPresentThach, getPresentThach, getStyleThach, insertProductThach, getAllProductThachBao } = require('../configService');
+const {
+  appendProductThach,
+  getAllProductThach,
+  appendPresentThach,
+  getPresentThach,
+  getStyleThach,
+  insertProductThach,
+  getAllProductThachBao,
+  getTargetThach,
+  appendTargetThach,
+} = require('../configService');
 const { locationCell } = require('../../config/thach/locationCell');
+const { enumTarget } = require('../../constants/enumValue');
 
 // lấy tất cả các sảm phẩm các chuyền
 async function getAllProductThachServices() {
@@ -72,7 +83,7 @@ async function appendProductThachServices(sewingName, productName, date, timeLin
   });
 }
 
-// thêm sản
+// thêm người đi làm vắng mặt
 async function appendPresentThachServices(sewingName, date, present, absent) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -106,12 +117,58 @@ async function getStyleThachServices(styleHat) {
       data = data.filter((els) => els[0] == styleHat);
 
       data = { imageLink: data[0][1] };
+      // console.log(data, styleHat);
       resolve(data);
     } catch (error) {
       reject(error);
     }
   });
 }
+
+// thêm target
+async function thachPostTargetServices(line, date, dayTarget, timeStampValue) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const dataRequest = [line, date, dayTarget, timeStampValue];
+
+      await appendTargetThach(dataRequest);
+
+      resolve([]);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+function compaDate(data) {
+  const [header, ...rows] = data;
+
+  const sortedRows = rows.sort((a, b) => new Date(b[1]) - new Date(a[1]));
+
+  return [header, ...sortedRows];
+}
+
+// thêm target
+async function getTargetThachServices(sewingName, date) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log(sewingName, date);
+      const respone = await getTargetThach();
+      let data = compaDate(respone);
+
+      data = data.filter((els) => els[enumTarget.LINE] == sewingName);
+
+      if (data?.length > 0) {
+        data = data[0][2];
+      }
+
+      resolve(data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 module.exports = {
   getPresentThachServices,
   appendPresentThachServices,
@@ -120,4 +177,6 @@ module.exports = {
   getfilterProductThachServices,
   getfilterProductNameThachServices,
   getStyleThachServices,
+  thachPostTargetServices,
+  getTargetThachServices,
 };

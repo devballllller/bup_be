@@ -31,6 +31,13 @@ const EnumSim = {
   QR_CODE_IMAGE: 11,
 };
 
+// thach
+const enumTarget = {
+  LINE: 0,
+  DATE: 1,
+  DAYTARGET: 2,
+};
+
 // biii
 const nameOfField = {
   Stationaries: 'Stationaries',
@@ -59,4 +66,5 @@ const enumStationary = {
   stock: 1,
   actual: 2,
 };
-module.exports = { EmployeeInformationEnum, EnumSim, enumRequest, enumStationary, nameOfField };
+
+module.exports = { EmployeeInformationEnum, EnumSim, enumRequest, enumStationary, nameOfField, enumTarget };
