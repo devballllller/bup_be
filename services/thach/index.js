@@ -141,11 +141,25 @@ async function thachPostTargetServices(line, date, dayTarget, timeStampValue) {
 }
 
 function compaDate(data) {
-  const [header, ...rows] = data;
+  const sortedRows = data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
 
-  const sortedRows = rows.sort((a, b) => new Date(b[1]) - new Date(a[1]));
+  return sortedRows;
+}
 
-  return [header, ...sortedRows];
+function compaDateLineDay(data) {
+  const latestByLine = {};
+
+  data.forEach((row) => {
+    const [line, dateStr] = row;
+    const date = new Date(dateStr);
+
+    if (!latestByLine[line] || new Date(latestByLine[line][1]) < date) {
+      latestByLine[line] = row;
+    }
+  });
+
+  // Convert object to array & sort theo Line 1 -> Line 6
+  return Object.values(latestByLine).sort((a, b) => a[0].localeCompare(b[0]));
 }
 
 // thêm target
@@ -169,6 +183,27 @@ async function getTargetThachServices(sewingName, date) {
   });
 }
 
+// thêm target
+async function thachGetTargetServices() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const respone = await getTargetThach();
+      let data = compaDateLineDay(respone);
+
+      data = data.map((els) => {
+        return {
+          line: els[0],
+          date: els[1],
+          dayTarget: els[2],
+        };
+      });
+      resolve(data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 module.exports = {
   getPresentThachServices,
   appendPresentThachServices,
@@ -179,4 +214,5 @@ module.exports = {
   getStyleThachServices,
   thachPostTargetServices,
   getTargetThachServices,
+  thachGetTargetServices,
 };

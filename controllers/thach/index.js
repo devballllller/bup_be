@@ -9,6 +9,7 @@ const {
   getStyleThachServices,
   thachPostTargetServices,
   getTargetThachServices,
+  thachGetTargetServices,
 } = require('../../services/thach/index');
 
 async function thachGetAllProductController(req, res) {
@@ -192,6 +193,24 @@ async function thachPostTargetController(req, res) {
   }
 }
 
+async function thachGetTargetController(req, res) {
+  try {
+    const data = await thachGetTargetServices();
+
+    if (data) {
+      res.status(200).json({
+        data,
+        success: true,
+        message: 'Truy xuất thành công ảnh mũ mẫu',
+      });
+    } else {
+      res.status(404).json({ error: 'Truy xuất không thành công ảnh mũ mẫu' });
+    }
+  } catch (error) {
+    console.error('Lỗi:', error);
+    res.status(500).json({ error: 'Lỗi khi truy xuất ảnh mẫu.' });
+  }
+}
 module.exports = {
   thachGetPresentController,
   thachPostProductController,
@@ -201,4 +220,5 @@ module.exports = {
   thachPostPresentController,
   thachGetStyleController,
   thachPostTargetController,
+  thachGetTargetController,
 };
