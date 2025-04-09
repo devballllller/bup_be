@@ -100,7 +100,7 @@ async function getPresentThachServices(sewingName, date) {
   return new Promise(async (resolve, reject) => {
     try {
       const data = await getPresentThach(sewingName, date);
-      console.log(data);
+
       resolve(data);
     } catch (error) {
       reject(error);
@@ -117,7 +117,7 @@ async function getStyleThachServices(styleHat) {
       data = data.filter((els) => els[0] == styleHat);
 
       data = { imageLink: data[0][1] };
-      // console.log(data, styleHat);
+
       resolve(data);
     } catch (error) {
       reject(error);
@@ -166,7 +166,6 @@ function compaDateLineDay(data) {
 async function getTargetThachServices(sewingName, date) {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(sewingName, date);
       const respone = await getTargetThach();
       let data = compaDate(respone);
 

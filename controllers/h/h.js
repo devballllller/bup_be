@@ -37,8 +37,6 @@ async function postAttendanceControllersH(req, res) {
     const dd = parseInt(dddd);
     const formattedDate = `${dd}/${mm}/${yy}`;
 
-    // console.log(formattedDate, formattedTime);
-
     let rowIndex = data.findIndex((row) => row[1] == name);
     if (rowIndex == -1) {
       console.log(`Không thể tìm thấy tên ${name} trong cột`);

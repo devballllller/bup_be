@@ -15,7 +15,7 @@ const {
 async function thachGetAllProductController(req, res) {
   try {
     const data = await getAllProductThachServices();
-    console.log(data);
+
     if (data) {
       res.status(200).json({
         data,

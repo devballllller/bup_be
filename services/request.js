@@ -10,7 +10,7 @@ async function getSendAllRequestService() {
 
 async function getSendRequestService(employeeId) {
   const allEmployee = await allRequest();
-  console.log(allEmployee);
+
   const data = allEmployee?.filter((empId) => empId[0] == employeeId);
   return data;
 }
@@ -20,7 +20,7 @@ async function PostSendRequestService(name, employeeId, TypeRequest, Request, Im
     try {
       const timestamp = getCurrentTime();
       const stateRequest = process.env.DEFAUL_VALUE_REQUEST_N;
-      console.log(stateRequest, 'stateRequest');
+
       const user = [employeeId, TypeRequest, name, Request, Image, DateTimekeeping, stateRequest, timestamp];
 
       await sendRequest(user);
@@ -53,7 +53,7 @@ async function InsertServices(employeeId, values, field) {
       }
 
       let range = `Request!${String.fromCharCode(65 + columnIndex)}${rowIndex + 1}`;
-      console.log('range', range);
+
       const response = await insertAccpetRequest([values], range);
 
       resolve(response);

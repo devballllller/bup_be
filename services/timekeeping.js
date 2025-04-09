@@ -43,15 +43,12 @@ async function insertTimekeepingServices(employeeId, dayTimekeeping, values) {
       let columnLetter = getExcelColumnName(columnIndex);
       let range = `Timekeeping!${columnLetter}${rowIndex + 6}`;
 
-      console.log('range:', range);
-
       const response = await insertTimekeeping([values], range);
       if (!response) {
         reject('Chèn chấm công không thành công tại controller');
         return;
       }
 
-      console.log('Response:', response);
       resolve(response);
     } catch (error) {
       console.error('Lỗi trong insertTimekeepingServices:', error);

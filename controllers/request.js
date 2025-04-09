@@ -47,7 +47,6 @@ async function getSendRequestController(req, res) {
 async function postSendRequestController(req, res) {
   const { name, employeeId, TypeRequest, DateTimekeeping, Request, Image } = req.body;
 
-  console.log(name, employeeId);
   if (!name || !employeeId) {
     return res.status(400).json({ error: 'Tên không được phép rỗng hoặc không tồn tại nhân viên' });
   }
@@ -76,7 +75,7 @@ async function postSendRequestController(req, res) {
 
 async function insertAcceptController(req, res) {
   const { employeeId, value, field } = req.body;
-  console.log(employeeId, value, field);
+
   try {
     const data = await InsertServices(employeeId, value, field);
 

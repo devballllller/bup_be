@@ -14,8 +14,6 @@ async function getSendEmailController({ to, subject, text }) {
       subject,
       text,
     });
-
-    console.log('Email gửi thành công!');
   } catch (error) {
     console.error('Lỗi gửi email:', error);
   }

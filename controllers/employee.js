@@ -9,7 +9,7 @@ async function findEmployeeRestController(req, res) {
 
   try {
     const rows = await findEmployeeRestService(name);
-    console.log(name);
+
     if (rows.length > 0) {
       const employee = rows[0];
 

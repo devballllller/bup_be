@@ -2,7 +2,7 @@ const { findValuesByNameAndPassword } = require('../services/auth');
 
 async function loginController(req, res) {
   const { phone, password } = req.body;
-  console.log(phone, password, 'phone, password');
+
   if ((!phone, !password)) {
     return res.status(400).json({ error: 'Số điện thoại hoặc mật khẩu không được phép rỗng.' });
   }

@@ -92,7 +92,7 @@ async function biloginRequestSercvices(phone) {
         dayactive: dataRaw[0][EmployeeInformationEnum.DAY_ACTIVE] || '',
       };
     }
-    console.log(data);
+
     return data;
   } catch (error) {
     console.error(error);
@@ -126,7 +126,7 @@ async function biGetAllUserSercvices() {
         };
       });
     }
-    console.log(data);
+
     return data;
   } catch (error) {
     console.error(error);
@@ -245,7 +245,7 @@ async function biGetAllRequestVPPSercvices() {
 async function biPostRequestVPPSercvices(id, name, phone, vppname, vppnumber, daysend, type) {
   try {
     const requestdATA = [id, name, phone, vppname, vppnumber, daysend, status, '', type];
-    console.log(requestdATA);
+
     const response = await postVpp(requestdATA);
 
     return response;
@@ -259,7 +259,7 @@ async function biPostRequestVPPSercvices(id, name, phone, vppname, vppnumber, da
 async function biGetRequestVPPUserSercvices(phone, type) {
   try {
     const response = await getAllVppRequest();
-    console.log(phone, type);
+
     const data = response
       .filter((els) => els[enumRequest.phone] === phone && els[enumRequest.type] === type)
       .map((els) => ({
@@ -282,7 +282,6 @@ async function biGetRequestVPPUserSercvices(phone, type) {
 
 //duyệt yêu cầu vpp
 async function biAcceptAdminSercvices(id, status, reason, name, number) {
-  console.log(id, status, reason, name, number, 'id, status, reason, name, number');
   try {
     const response = await getAllVppRequest();
     const { data, data1, data2, data3 } = await biGetAllVPPSercvices();
@@ -300,11 +299,9 @@ async function biAcceptAdminSercvices(id, status, reason, name, number) {
 
           let range1 = `${nameOfField.Stationaries}!${String.fromCharCode(65 + Number(enumStationary.stock))}${indexRow1 + 2}`;
 
-          console.log(indexRow1);
           const stock = Number(data2[indexRow1]) - Number(number);
           const actual = Number(data3[indexRow1]) + Number(number);
 
-          console.log(Number(data2[indexRow1]), Number(data3[indexRow1]), 'stock, actual');
           await insertVPPBI([stock, actual], range1);
         }
       }
@@ -314,11 +311,9 @@ async function biAcceptAdminSercvices(id, status, reason, name, number) {
 
           let range1 = `${nameOfField.Stationaries}!${String.fromCharCode(65 + Number(enumStationary.stock))}${indexRow1 + 2}`;
 
-          console.log(indexRow1);
           const stock = Number(data2[indexRow1]) - Number(number);
           const actual = Number(data3[indexRow1]) + Number(number);
 
-          console.log(Number(data2[indexRow1]), Number(data3[indexRow1]), 'stock, actual');
           await insertVPPBI([stock, actual], range1);
         }
       }
