@@ -8,9 +8,11 @@ const {
   getAllProductThachBao,
   getTargetThach,
   appendTargetThach,
+  getTotalManThach,
+  insertTotalManThach,
 } = require('../configService');
 const { locationCell } = require('../../config/thach/locationCell');
-const { enumTarget } = require('../../constants/enumValue');
+const { enumTarget, enumManPCSSALARY } = require('../../constants/enumValue');
 
 // lấy tất cả các sảm phẩm các chuyền
 async function getAllProductThachServices() {
@@ -59,7 +61,7 @@ async function getfilterProductNameThachServices(sewingName) {
 }
 
 // thêm sản phẩm vào
-async function appendProductThachServices(sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails, dayTarget, timeStampValue) {
+async function appendProductThachServices(sewingName, productName, date, timeLine, productReceive, productAccept, productFails, dayTarget, timeStampValue, sewingNameMan) {
   return new Promise(async (resolve, reject) => {
     try {
       const allDataProduct = await getAllProductThach();
@@ -69,11 +71,19 @@ async function appendProductThachServices(sewingName, productName, date, timeLin
       const actualValue1 = Math.round(Number(dayTarget) / 8);
 
       if (dataFilter == -1) {
-        await appendProductThach([sewingName, productName, dayTarget, date, timeLine, actualValue1, productReceive, productAccept, productFails, timeStampValue]);
+        await appendProductThach([sewingName, productName, dayTarget, date, timeLine, actualValue1, productReceive, productAccept, productFails, timeStampValue, sewingNameMan]);
       } else {
         const rangeInsert = `THACH!A${dataFilter + 2}`;
-        await insertProductThach([sewingName, productName, dayTarget, date, timeLine, actualValue1, productReceive, productAccept, productFails, timeStampValue], rangeInsert);
+        await insertProductThach(
+          [sewingName, productName, dayTarget, date, timeLine, actualValue1, productReceive, productAccept, productFails, timeStampValue, sewingNameMan],
+          rangeInsert,
+        );
+
+        const [year, month, day] = date.split('-');
+
+        await postManPSCSALARYServices(day, month, sewingNameMan, productName, productAccept);
       }
+
       resolve({
         data: {},
         message: 'Thêm thành công',
@@ -205,6 +215,42 @@ async function thachGetTargetServices() {
   });
 }
 
+function numberToColumnLetter(n) {
+  let result = '';
+  while (n >= 0) {
+    result = String.fromCharCode((n % 26) + 65) + result;
+    n = Math.floor(n / 26) - 1;
+  }
+  return result;
+}
+
+// thêm VÀO PCS SALARY MẪN
+async function postManPSCSALARYServices(day, month, sewingNameMan, productName, productAccept) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const respone = await getTotalManThach(`${month}${enumManPCSSALARY.NAMESHEET}`);
+
+      const columnIndex = respone[0].indexOf(day);
+      const rowIndex = respone.findIndex((els) => els[0] == sewingNameMan && els[2] == productName);
+
+      if (columnIndex != -1 && rowIndex != -1) {
+        let data = Number(respone[rowIndex][columnIndex]);
+        data += Number(productAccept);
+
+        const colLetter = numberToColumnLetter(columnIndex);
+        const range = `${month}${enumManPCSSALARY.PARTNAME}${colLetter}${rowIndex + 7}`;
+
+        await insertTotalManThach([data], range);
+      }
+
+      let data = [];
+      resolve(data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 module.exports = {
   getPresentThachServices,
   appendPresentThachServices,
@@ -216,4 +262,5 @@ module.exports = {
   thachPostTargetServices,
   getTargetThachServices,
   thachGetTargetServices,
+  postManPSCSALARYServices,
 };

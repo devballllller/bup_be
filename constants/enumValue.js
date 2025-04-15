@@ -38,6 +38,16 @@ const enumTarget = {
   DAYTARGET: 2,
 };
 
+const PARTNAME = '/2025!';
+
+const enumManPCSSALARY = {
+  PARTNAME: PARTNAME,
+  NAMESHEET: `${PARTNAME}A7:AO100`,
+  LINE: 0,
+  DATE: 1,
+  DAYTARGET: 2,
+};
+
 // biii
 const nameOfField = {
   Stationaries: 'Stationaries',
@@ -67,4 +77,4 @@ const enumStationary = {
   actual: 2,
 };
 
-module.exports = { EmployeeInformationEnum, EnumSim, enumRequest, enumStationary, nameOfField, enumTarget };
+module.exports = { EmployeeInformationEnum, EnumSim, enumRequest, enumStationary, nameOfField, enumTarget, enumManPCSSALARY };

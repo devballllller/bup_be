@@ -10,6 +10,8 @@ const {
   thachPostTargetServices,
   getTargetThachServices,
   thachGetTargetServices,
+
+  postManPSCSALARYServices,
 } = require('../../services/thach/index');
 
 async function thachGetAllProductController(req, res) {
@@ -32,9 +34,8 @@ async function thachGetAllProductController(req, res) {
 }
 
 async function thachPostProductController(req, res) {
-  const { sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails } = req.body;
+  const { sewingName, productName, date, timeLine, productReceive, productAccept, productFails, sewingNameMan } = req.body;
 
-  console.log(sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails);
   if (!sewingName) {
     return res.status(400).json({ error: 'Tên không được phép rỗng.' });
   }
@@ -43,7 +44,7 @@ async function thachPostProductController(req, res) {
     const timeStampValue = new Date().toLocaleString();
     const dayTarget = await getTargetThachServices(sewingName, date);
 
-    const rows = await appendProductThachServices(sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails, dayTarget, timeStampValue);
+    const rows = await appendProductThachServices(sewingName, productName, date, timeLine, productReceive, productAccept, productFails, dayTarget, timeStampValue, sewingNameMan);
 
     if (rows) {
       res.status(200).json({
@@ -212,6 +213,26 @@ async function thachGetTargetController(req, res) {
     res.status(500).json({ error: 'Lỗi khi truy xuất ảnh mẫu.' });
   }
 }
+
+async function thachtestController(req, res) {
+  try {
+    const data = await postManPSCSALARYServices();
+
+    if (data) {
+      res.status(200).json({
+        data,
+        success: true,
+        message: 'Truy xuất thành công ảnh mũ mẫu',
+      });
+    } else {
+      res.status(404).json({ error: 'Truy xuất không thành công ảnh mũ mẫu' });
+    }
+  } catch (error) {
+    console.error('Lỗi:', error);
+    res.status(500).json({ error: 'Lỗi khi truy xuất ảnh mẫu.' });
+  }
+}
+
 module.exports = {
   thachGetPresentController,
   thachPostProductController,
@@ -222,4 +243,5 @@ module.exports = {
   thachGetStyleController,
   thachPostTargetController,
   thachGetTargetController,
+  thachtestController,
 };

@@ -25,6 +25,31 @@ async function getSheetData(sheetKey) {
   }
 }
 
+async function getSheetDataWithRange(sheetKey, range) {
+  try {
+    console.log(`Fetching data for: ${sheetKey}`);
+
+    if (!SHEETS_CONFIG[sheetKey]) throw new Error(`Invalid sheet key: ${sheetKey}`);
+
+    const auth = await getAuthClient();
+    const res = await sheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId: SHEETS_CONFIG[sheetKey].id,
+      range: range,
+    });
+
+    if (!res.data || !res.data.values) {
+      console.warn(`No data found for ${sheetKey}`);
+      return [];
+    }
+
+    return res.data.values;
+  } catch (error) {
+    console.error(`Error fetching data for ${sheetKey}:`, error);
+    return [];
+  }
+}
+
 async function appendData(sheetKey, values, range) {
   try {
     if (!SHEETS_CONFIG[sheetKey]) {
@@ -211,6 +236,14 @@ async function getTargetThach() {
 async function appendTargetThach(data) {
   return await appendData('THACH_TARGET', data);
 }
+
+async function getTotalManThach(range) {
+  return await getSheetDataWithRange('THACH_TARGET_MAN', range);
+}
+
+async function insertTotalManThach(values, range) {
+  return await updateData('THACH_TARGET_MAN', values, range);
+}
 module.exports = {
   insertTimekeeping,
   allTimekeeping,
@@ -234,6 +267,10 @@ module.exports = {
   getAllProductThachBao,
   getTargetThach,
   appendTargetThach,
+
+  // Man
+  getTotalManThach,
+  insertTotalManThach,
 
   // BI
   getAllUserBI,
