@@ -66,11 +66,13 @@ async function appendProductThachServices(sewingName, productName, date, timeLin
 
       const dataFilter = allDataProduct.findIndex((els) => els[0] == sewingName && els[3] == date && els[4] == timeLine);
 
+      const actualValue1 = Math.round(Number(dayTarget) / 8);
+
       if (dataFilter == -1) {
-        await appendProductThach([sewingName, productName, dayTarget, date, timeLine, actualValue, productReceive, productAccept, productFails, timeStampValue]);
+        await appendProductThach([sewingName, productName, dayTarget, date, timeLine, actualValue1, productReceive, productAccept, productFails, timeStampValue]);
       } else {
         const rangeInsert = `THACH!A${dataFilter + 2}`;
-        await insertProductThach([sewingName, productName, dayTarget, date, timeLine, actualValue, productReceive, productAccept, productFails, timeStampValue], rangeInsert);
+        await insertProductThach([sewingName, productName, dayTarget, date, timeLine, actualValue1, productReceive, productAccept, productFails, timeStampValue], rangeInsert);
       }
       resolve({
         data: {},

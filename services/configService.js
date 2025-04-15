@@ -11,7 +11,6 @@ async function getSheetData(sheetKey) {
       auth,
       spreadsheetId: SHEETS_CONFIG[sheetKey].id,
       range: SHEETS_CONFIG[sheetKey].range,
-      valueRenderOption: 'FORMULA',
     });
 
     if (!res.data || !res.data.values) {
@@ -56,7 +55,6 @@ async function appendData(sheetKey, values, range) {
 }
 
 async function updateData(sheetKey, values, range) {
-  console.log(sheetKey, values, range);
   try {
     if (!SHEETS_CONFIG[sheetKey]) {
       throw new Error(`Invalid sheet key: ${sheetKey}`);

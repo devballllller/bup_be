@@ -229,6 +229,7 @@ async function biGetAllRequestVPPSercvices() {
         vppnumber: els[enumRequest.vppnumber],
         daysend: els[enumRequest.daysend],
         status: els[enumRequest.status],
+        type: els[enumRequest.type],
       };
     });
 
@@ -271,8 +272,10 @@ async function biGetRequestVPPUserSercvices(phone, type) {
         daysend: els[enumRequest.daysend],
         status: els[enumRequest.status],
         reason: els[enumRequest.reason],
+        type: els[enumRequest.type],
       }));
 
+    console.log(data);
     return data;
   } catch (error) {
     console.error(error);
@@ -305,6 +308,7 @@ async function biAcceptAdminSercvices(id, status, reason, name, number) {
           await insertVPPBI([stock, actual], range1);
         }
       }
+
       for (let i = 0; i < data.length; i++) {
         if (data[i] == name) {
           const indexRow1 = data1.findIndex((els) => els == name);

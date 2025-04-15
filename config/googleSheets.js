@@ -35,8 +35,8 @@ const SHEETS_CONFIG = {
   BI_VPP: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: `${nameOfField.Stationaries}!A2:C1000` },
   BI_REQUEST: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: `${nameOfField.RequestStationary}!A2:J1000` },
 
-  BI_DEVICE: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: `${nameOfField.Uniform}!A2:C1000` },
-  BI_UNIFORM: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: `${nameOfField.Devices}!A2:C1000` },
+  BI_DEVICE: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: `${nameOfField.Devices}!A2:C1000` },
+  BI_UNIFORM: { id: '11cOq5xhFiOvHuVnIN5P2_jj6NmRvT_-THOyYwg_JLgo', range: `${nameOfField.Uniform}!A2:C1000` },
 };
 
 // Hàm lấy client xác thực Google Sheets API

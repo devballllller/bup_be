@@ -34,6 +34,7 @@ async function thachGetAllProductController(req, res) {
 async function thachPostProductController(req, res) {
   const { sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails } = req.body;
 
+  console.log(sewingName, productName, date, timeLine, actualValue, productReceive, productAccept, productFails);
   if (!sewingName) {
     return res.status(400).json({ error: 'Tên không được phép rỗng.' });
   }
