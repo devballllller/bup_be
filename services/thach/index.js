@@ -62,37 +62,35 @@ async function getfilterProductNameThachServices(sewingName) {
 
 // thêm sản phẩm vào
 async function appendProductThachServices(sewingName, productName, date, timeLine, productReceive, productAccept, productFails, dayTarget, timeStampValue, sewingNameMan) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const allDataProduct = await getAllProductThach();
+  try {
+    const allDataProduct = await getAllProductThach();
+    const rowIndex = allDataProduct.findIndex((row) => row[0] === sewingName && row[3] === date && row[4] === timeLine);
 
-      const dataFilter = allDataProduct.findIndex((els) => els[0] == sewingName && els[3] == date && els[4] == timeLine);
+    const actualValue = Math.round(Number(dayTarget) / 8);
+    const rowData = [sewingName, productName, dayTarget, date, timeLine, actualValue, productReceive, productAccept, productFails, timeStampValue, sewingNameMan];
 
-      const actualValue1 = Math.round(Number(dayTarget) / 8);
+    const [year, month, day] = date.split('-');
 
-      if (dataFilter == -1) {
-        await appendProductThach([sewingName, productName, dayTarget, date, timeLine, actualValue1, productReceive, productAccept, productFails, timeStampValue, sewingNameMan]);
-      } else {
-        const rangeInsert = `THACH!A${dataFilter + 2}`;
-        await insertProductThach(
-          [sewingName, productName, dayTarget, date, timeLine, actualValue1, productReceive, productAccept, productFails, timeStampValue, sewingNameMan],
-          rangeInsert,
-        );
+    if (rowIndex === -1) {
+      await appendProductThach(rowData);
+      await postManPSCSALARYServices(day, month, sewingNameMan, productName, productAccept);
+    } else {
+      const prevAccept = Number(allDataProduct[rowIndex][7] || 0);
+      const diff = Math.abs(productAccept - prevAccept);
+      const range = `THACH!A${rowIndex + 2}`;
 
-        const [year, month, day] = date.split('-');
-
-        await postManPSCSALARYServices(day, month, sewingNameMan, productName, productAccept);
-      }
-
-      resolve({
-        data: {},
-        message: 'Thêm thành công',
-        success: true,
-      });
-    } catch (error) {
-      reject(error);
+      await insertProductThach(rowData, range);
+      await postManPSCSALARYServices(day, month, sewingNameMan, productName, diff);
     }
-  });
+
+    return {
+      data: {},
+      message: 'Thêm thành công',
+      success: true,
+    };
+  } catch (error) {
+    throw error;
+  }
 }
 
 // thêm người đi làm vắng mặt
@@ -226,29 +224,28 @@ function numberToColumnLetter(n) {
 
 // thêm VÀO PCS SALARY MẪN
 async function postManPSCSALARYServices(day, month, sewingNameMan, productName, productAccept) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const respone = await getTotalManThach(`${month}${enumManPCSSALARY.NAMESHEET}`);
+  try {
+    const response = await getTotalManThach(`${month}${enumManPCSSALARY.NAMESHEET}`);
+    const columnIndex = response[0].indexOf(day);
 
-      const columnIndex = respone[0].indexOf(day);
-      const rowIndex = respone.findIndex((els) => els[0] == sewingNameMan && els[2] == productName);
+    let rowIndex = response.findIndex((row) =>
+      sewingNameMan === 'Baller 1' || sewingNameMan === 'Baller 2' ? row[0] === sewingNameMan : row[0] === sewingNameMan && row[2] === productName,
+    );
 
-      if (columnIndex != -1 && rowIndex != -1) {
-        let data = Number(respone[rowIndex][columnIndex]);
-        data += Number(productAccept);
+    if (columnIndex !== -1 && rowIndex !== -1) {
+      const currentValue = Number(response[rowIndex][columnIndex] || 0);
+      const updatedValue = currentValue + Number(productAccept);
 
-        const colLetter = numberToColumnLetter(columnIndex);
-        const range = `${month}${enumManPCSSALARY.PARTNAME}${colLetter}${rowIndex + 7}`;
+      const colLetter = numberToColumnLetter(columnIndex);
+      const range = `${month}${enumManPCSSALARY.PARTNAME}${colLetter}${rowIndex + 7}`;
 
-        await insertTotalManThach([data], range);
-      }
-
-      let data = [];
-      resolve(data);
-    } catch (error) {
-      reject(error);
+      await insertTotalManThach([updatedValue], range);
     }
-  });
+
+    return [];
+  } catch (error) {
+    throw error;
+  }
 }
 
 module.exports = {
