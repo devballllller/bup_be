@@ -230,7 +230,6 @@ async function postManPSCSALARYServices(day, month, sewingNameMan, productName, 
 
     const productNameSplit = productName?.split(' ')[0];
 
-    console.log(productNameSplit, 'productNameSplit');
     let rowIndex = response.findIndex((row) =>
       sewingNameMan === 'Baller 1' || sewingNameMan === 'Baller 2' ? row[0] === sewingNameMan : row[0] === sewingNameMan && row[2] === productNameSplit,
     );
