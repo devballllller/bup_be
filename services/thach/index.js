@@ -228,8 +228,11 @@ async function postManPSCSALARYServices(day, month, sewingNameMan, productName, 
     const response = await getTotalManThach(`${month}${enumManPCSSALARY.NAMESHEET}`);
     const columnIndex = response[0].indexOf(day);
 
+    const productNameSplit = productName?.split(' ')[0];
+
+    console.log(productNameSplit, 'productNameSplit');
     let rowIndex = response.findIndex((row) =>
-      sewingNameMan === 'Baller 1' || sewingNameMan === 'Baller 2' ? row[0] === sewingNameMan : row[0] === sewingNameMan && row[2] === productName,
+      sewingNameMan === 'Baller 1' || sewingNameMan === 'Baller 2' ? row[0] === sewingNameMan : row[0] === sewingNameMan && row[2] === productNameSplit,
     );
 
     if (columnIndex !== -1 && rowIndex !== -1) {
