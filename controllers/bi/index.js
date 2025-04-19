@@ -227,7 +227,6 @@ async function biGetRequestVPPUserController(req, res) {
 async function biAcceptAdminController(req, res) {
   const { id, status, reason, name, number } = req.body;
   try {
-    console.log(id, status, reason, name, number);
     const data = await biAcceptAdminSercvices(id, status, reason, name, number);
 
     if (data) {

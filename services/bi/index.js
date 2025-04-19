@@ -275,7 +275,6 @@ async function biGetRequestVPPUserSercvices(phone, type) {
         type: els[enumRequest.type],
       }));
 
-    console.log(data);
     return data;
   } catch (error) {
     console.error(error);

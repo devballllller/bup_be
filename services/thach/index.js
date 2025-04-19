@@ -63,22 +63,36 @@ async function getfilterProductNameThachServices(sewingName) {
 // thêm sản phẩm vào
 async function appendProductThachServices(sewingName, productName, date, timeLine, productReceive, productAccept, productFails, dayTarget, timeStampValue, sewingNameMan) {
   try {
+    // 1. Lấy tất cả các sản lượng
     const allDataProduct = await getAllProductThach();
+    // tìm dòng: theo tên - theo ngày - theo line
     const rowIndex = allDataProduct.findIndex((row) => row[0] === sewingName && row[3] === date && row[4] === timeLine);
 
+    // giá trị mong đợi và dữ liệu insert
     const actualValue = Math.round(Number(dayTarget) / 8);
     const rowData = [sewingName, productName, dayTarget, date, timeLine, actualValue, productReceive, productAccept, productFails, timeStampValue, sewingNameMan];
 
+    // format ngày
     const [year, month, day] = date.split('-');
 
+    let sumAccept = 0;
+    const rowIndexArray = allDataProduct?.filter((row) => row[0] === sewingName && row[3] === date);
+
+    rowIndexArray?.map((els) => {
+      sumAccept += Number(els[7]);
+    });
+
+    // nếu không có thì tọa mới
     if (rowIndex === -1) {
       await appendProductThach(rowData);
-      await postManPSCSALARYServices(day, month, sewingNameMan, productName, productAccept);
-    } else {
+      const diff = Math.abs(Number(sumAccept) + Number(productAccept));
+      await postManPSCSALARYServices(day, month, sewingNameMan, productName, diff);
+    }
+    // ngược lại là cập nhật
+    else {
       const prevAccept = Number(allDataProduct[rowIndex][7] || 0);
-      const diff = Math.abs(productAccept - prevAccept);
+      const diff = Math.abs(Number(sumAccept) - Number(prevAccept) + Number(productAccept));
       const range = `THACH!A${rowIndex + 2}`;
-
       await insertProductThach(rowData, range);
       await postManPSCSALARYServices(day, month, sewingNameMan, productName, diff);
     }
@@ -235,13 +249,10 @@ async function postManPSCSALARYServices(day, month, sewingNameMan, productName, 
     );
 
     if (columnIndex !== -1 && rowIndex !== -1) {
-      const currentValue = Number(response[rowIndex][columnIndex] || 0);
-      const updatedValue = currentValue + Number(productAccept);
-
       const colLetter = numberToColumnLetter(columnIndex);
       const range = `${month}${enumManPCSSALARY.PARTNAME}${colLetter}${rowIndex + 7}`;
 
-      await insertTotalManThach([updatedValue], range);
+      await insertTotalManThach([productAccept], range);
     }
 
     return [];

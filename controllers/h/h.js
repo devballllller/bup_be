@@ -49,9 +49,8 @@ async function postAttendanceControllersH(req, res) {
       console.log(`Không thể tìm thấy trường ${name} trong hàng`);
       return;
     }
-    console.log(rowIndex, columnIndex);
+
     let rangeTotalHour = `T${mm}!${String.fromCharCode(65 + columnIndex)}${rowIndex + parseInt(process.env.VALUE_STARTED) + 1}`;
-    console.log(rangeTotalHour, 'rangeTotalHour');
 
     await insertAttendance([totalHour], rangeTotalHour);
     let rangeTypeHour = `T${mm}!${String.fromCharCode(65 + columnIndex)}${rowIndex + 1 + parseInt(process.env.VALUE_STARTED) + 1}`;
