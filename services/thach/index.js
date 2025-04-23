@@ -76,23 +76,26 @@ async function appendProductThachServices(sewingName, productName, date, timeLin
     const [year, month, day] = date.split('-');
 
     let sumAccept = 0;
-    const rowIndexArray = allDataProduct?.filter((row) => row[0] === sewingName && row[3] === date && row[1] == productName);
-
-    // const rowIndexArray = allDataProduct?.filter((row) => row[0] === sewingName && row[3] === date && row[4] === timeLine);
-
-    console.log(rowIndexArray);
-    rowIndexArray?.map((els) => {
-      sumAccept += Number(els[7]);
-    });
 
     // nếu không có thì tọa mới
     if (rowIndex === -1) {
+      const rowIndexArray = allDataProduct?.filter((row) => row[0] === sewingName && row[3] === date && row[1] == productName);
+
+      rowIndexArray?.map((els) => {
+        sumAccept += Number(els[7]);
+      });
+
       await appendProductThach(rowData);
       const diff = Math.abs(Number(sumAccept) + Number(productAccept));
       await postManPSCSALARYServices(day, month, sewingNameMan, productName, diff);
     }
     // ngược lại là cập nhật
     else {
+      const rowIndexArray = allDataProduct?.filter((row) => row[0] === sewingName && row[3] === date);
+
+      rowIndexArray?.map((els) => {
+        sumAccept += Number(els[7]);
+      });
       const prevAccept = Number(allDataProduct[rowIndex][7] || 0);
       const diff = Math.abs(Number(sumAccept) - Number(prevAccept) + Number(productAccept));
       const range = `THACH!A${rowIndex + 2}`;
