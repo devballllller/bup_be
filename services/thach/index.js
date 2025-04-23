@@ -76,7 +76,8 @@ async function appendProductThachServices(sewingName, productName, date, timeLin
     const [year, month, day] = date.split('-');
 
     let sumAccept = 0;
-    const rowIndexArray = allDataProduct?.filter((row) => row[0] === sewingName && row[3] === date);
+    // const rowIndexArray = allDataProduct?.filter((row) => row[0] === sewingName && row[3] === date );
+    const rowIndexArray = allDataProduct?.filter((row) => row[0] === sewingName && row[3] === date && row[4] === timeLine);
 
     rowIndexArray?.map((els) => {
       sumAccept += Number(els[7]);
