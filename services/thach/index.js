@@ -80,19 +80,19 @@ async function appendProductThachServices(sewingName, productName, date, timeLin
     // nếu không có thì tọa mới
     if (rowIndex === -1) {
       const rowIndexArray = allDataProduct?.filter((row) => row[0] === sewingName && row[3] === date && row[1] == productName);
-
       rowIndexArray?.map((els) => {
         sumAccept += Number(els[7]);
       });
 
       await appendProductThach(rowData);
       const diff = Math.abs(Number(sumAccept) + Number(productAccept));
+
       await postManPSCSALARYServices(day, month, sewingNameMan, productName, diff);
     }
     // ngược lại là cập nhật
     else {
-      const rowIndexArray = allDataProduct?.filter((row) => row[0] === sewingName && row[3] === date);
-
+      // const rowIndexArray = allDataProduct?.filter((row) => row[0] === sewingName && row[3] === date);
+      const rowIndexArray = allDataProduct?.filter((row) => row[0] === sewingName && row[3] === date && row[1] == productName);
       rowIndexArray?.map((els) => {
         sumAccept += Number(els[7]);
       });
@@ -246,6 +246,7 @@ function numberToColumnLetter(n) {
 async function postManPSCSALARYServices(day, month, sewingNameMan, productName, productAccept) {
   try {
     const response = await getTotalManThach(`${month}${enumManPCSSALARY.NAMESHEET}`);
+
     const columnIndex = response[0].indexOf(day);
 
     const productNameSplit = productName?.split(' ')[0];
