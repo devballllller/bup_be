@@ -25,8 +25,8 @@ const SHEETS_CONFIG = {
   THACH_TARGET: { id: '1iH5MjPSYG0YYqVyBMo2MxKvjZ1F7qKRQkEPNZ5pjaDQ', range: 'TARGET!A2:D10000' },
   THACH_TARGET_MAN: { id: '1CO7AOrZLPe5wXtlxL0W_tLN9wPTLZmLFqCJFxFmNnxE', range: '04/2025!A7:AO25' },
 
-  HUY_ATTENDANCE: { id: '1BXmuj4q2yv_jcJiDj0qW0kEPCzDhR-BoChOQGrvkZKA', range: 'T3!A8:AH10000' },
-  HUY_ATTENDANCE_INDEX: { id: '1BXmuj4q2yv_jcJiDj0qW0kEPCzDhR-BoChOQGrvkZKA', range: 'T3!A7:AH10000' },
+  HUY_ATTENDANCE: { id: '1BXmuj4q2yv_jcJiDj0qW0kEPCzDhR-BoChOQGrvkZKA', range: 'T5!A8:AH10000' },
+  HUY_ATTENDANCE_INDEX: { id: '1BXmuj4q2yv_jcJiDj0qW0kEPCzDhR-BoChOQGrvkZKA', range: 'T5!A7:AH10000' },
   HUY_ATTENDANCE_SALARY: { id: '1BXmuj4q2yv_jcJiDj0qW0kEPCzDhR-BoChOQGrvkZKA', range: 'T5!E1:G4' },
   HUY_LOGS: { id: '1BXmuj4q2yv_jcJiDj0qW0kEPCzDhR-BoChOQGrvkZKA', range: 'Logs!A1:AH10000' },
 
