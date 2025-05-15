@@ -201,6 +201,10 @@ async function insertStatusVPP(values, range) {
 
 // ----------------THACH
 
+async function getAuthThach() {
+  return await getSheetData('THACH_AUTH');
+}
+
 async function getAllProductThach() {
   return await getSheetData('THACH');
 }
@@ -258,6 +262,7 @@ module.exports = {
   updateData,
   allSendRequest,
   sendRequestBI,
+  getAuthThach,
   getAllProductThach,
   appendProductThach,
   appendPresentThach,

@@ -6,6 +6,7 @@ const {
   getStyleThach,
   insertProductThach,
   getAllProductThachBao,
+  getAuthThach,
   getTargetThach,
   appendTargetThach,
   getTotalManThach,
@@ -13,6 +14,30 @@ const {
 } = require('../configService');
 const { locationCell } = require('../../config/thach/locationCell');
 const { enumTarget, enumManPCSSALARY } = require('../../constants/enumValue');
+
+// login
+async function getLoginThachServices(requestData) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { phone, password } = requestData;
+      const respone = await getAuthThach();
+
+      const data = respone.map(([phone, password]) => ({
+        phone,
+        password,
+      }));
+
+      const dataCheck = data.filter((els) => els.phone == phone && els.password == password);
+      if (dataCheck.length > 0) {
+        resolve(dataCheck);
+      } else {
+        resolve([]);
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
 
 // lấy tất cả các sảm phẩm các chuyền
 async function getAllProductThachServices() {
@@ -269,6 +294,7 @@ async function postManPSCSALARYServices(day, month, sewingNameMan, productName, 
 }
 
 module.exports = {
+  getLoginThachServices,
   getPresentThachServices,
   appendPresentThachServices,
   getAllProductThachServices,

@@ -28,7 +28,7 @@ const {
   thachGetStyleController,
   thachPostTargetController,
   thachGetTargetController,
-
+  getLoginThachController,
   thachtestController,
 } = require('../controllers/thach/index');
 
@@ -88,6 +88,7 @@ router.get('/bi/get-all-vpprequest', biGetAllRequestVPPController); // duyệt y
 router.get('/bi/get-all-user', biGetAllUserControllers); // lất tất cả người dùng
 
 // -----------------------=> THACH
+router.post('/thach/auth-login', getLoginThachController);
 router.post('/thach/post-product', thachPostProductController);
 router.post('/thach/post-present', thachPostPresentController);
 router.post('/thach/get-present', thachGetPresentController);
