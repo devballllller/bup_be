@@ -1,4 +1,5 @@
-const { getTargetThach } = require('../../services/configService');
+const fs = require('fs');
+
 const {
   appendProductThachServices,
   getAllProductThachServices,
@@ -12,12 +13,14 @@ const {
   thachGetTargetServices,
   getLoginThachServices,
   postManPSCSALARYServices,
+  uploadServices,
+  getFailureServices,
+  postFailureNumberServices,
 } = require('../../services/thach/index');
 
 // đăng nhập
 async function getLoginThachController(req, res) {
   try {
-    console.log(req.body);
     const data = await getLoginThachServices(req.body);
 
     if (data) {
@@ -177,20 +180,23 @@ async function thachGetFilterProductController(req, res) {
 async function thachGetStyleController(req, res) {
   const { styleHat } = req.body;
   try {
-    const data = await getStyleThachServices(styleHat);
+    const bufferData = await getStyleThachServices(styleHat);
 
-    if (data) {
+    if (bufferData) {
+      const base64 = Buffer.from(bufferData.data).toString('base64');
+      const mimeType = bufferData.mimeType || 'image/png';
+
       res.status(200).json({
-        data,
+        data: `data:${mimeType};base64,${base64}`,
         success: true,
         message: 'Truy xuất thành công ảnh mũ mẫu',
       });
     } else {
-      res.status(404).json({ error: 'Truy xuất không thành công ảnh mũ mẫu' });
+      res.status(404).json({ success: false, message: 'Không tìm thấy ảnh mũ mẫu' });
     }
   } catch (error) {
     console.error('Lỗi:', error);
-    res.status(500).json({ error: 'Lỗi khi truy xuất ảnh mẫu.' });
+    res.status(500).json({ success: false, message: 'Lỗi khi truy xuất ảnh mẫu.' });
   }
 }
 
@@ -255,6 +261,47 @@ async function thachtestController(req, res) {
   }
 }
 
+async function uploadController(req, res) {
+  try {
+    const filePath = req.file.path;
+    const result = await uploadServices(filePath);
+
+    // Xoá file tạm sau khi upload thành công
+    fs.unlinkSync(filePath);
+
+    res.json({
+      success: true,
+      url: result.secure_url,
+      public_id: result.public_id,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+async function getFailureController(req, res) {
+  try {
+    const { sewingName, date } = req.body;
+
+    const data = await getFailureServices(sewingName, date);
+
+    res.json({ success: true, message: 'Truy xuất thành công ảnh dữ liệu lỗi', data });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+// chú ý
+async function postFailureNumberController(req, res) {
+  try {
+    const data = await postFailureNumberServices(req.body);
+
+    return res.json({ success: true, message: 'Truy xuất thành công ảnh dữ liệu lỗi', data });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
 module.exports = {
   getLoginThachController,
   thachGetPresentController,
@@ -267,4 +314,7 @@ module.exports = {
   thachPostTargetController,
   thachGetTargetController,
   thachtestController,
+  uploadController,
+  getFailureController,
+  postFailureNumberController,
 };

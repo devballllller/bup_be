@@ -248,6 +248,23 @@ async function getTotalManThach(range) {
 async function insertTotalManThach(values, range) {
   return await updateData('THACH_TARGET_MAN', values, range);
 }
+
+async function getFailureThach() {
+  return await getSheetData('THACH_FAILURE_HOUR');
+}
+
+async function appendFailureThach(data) {
+  return await appendData('THACH_FAILURE_HOUR', data);
+}
+
+async function getFailureImageThach() {
+  return await getSheetData('THACH_FAILURE_TOP');
+}
+
+async function appendFailureImageThach(data) {
+  return await appendData('THACH_FAILURE_TOP', data);
+}
+
 module.exports = {
   insertTimekeeping,
   allTimekeeping,
@@ -272,7 +289,10 @@ module.exports = {
   getAllProductThachBao,
   getTargetThach,
   appendTargetThach,
-
+  getFailureThach,
+  appendFailureThach,
+  appendFailureImageThach,
+  getFailureImageThach,
   // Man
   getTotalManThach,
   insertTotalManThach,

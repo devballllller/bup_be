@@ -1,3 +1,7 @@
+const { cloudinary } = require('../../config/thach/cloudinaryConfig');
+const { getAccessToken } = require('../../config/thach/getAccessToken');
+const axios = require('axios');
+
 const {
   appendProductThach,
   getAllProductThach,
@@ -11,6 +15,10 @@ const {
   appendTargetThach,
   getTotalManThach,
   insertTotalManThach,
+  getFailureThach,
+  appendFailureThach,
+  appendFailureImageThach,
+  getFailureImageThach,
 } = require('../configService');
 const { locationCell } = require('../../config/thach/locationCell');
 const { enumTarget, enumManPCSSALARY } = require('../../constants/enumValue');
@@ -59,6 +67,7 @@ async function getfilterProductThachServices(sewingName, date) {
 
       // const rows = await getAllProductThachBao();
       const data = rows.filter((row) => row[locationCell.SEWING_NAME] == sewingName && row[locationCell.DATE] == date);
+
       resolve(data);
     } catch (error) {
       reject(error);
@@ -77,7 +86,6 @@ async function getfilterProductNameThachServices(sewingName) {
       const data = new Set(getField);
       const backToArray = [...data];
 
-      // console.log(backToArray);
       resolve(backToArray);
     } catch (error) {
       reject(error);
@@ -151,10 +159,10 @@ async function appendPresentThachServices(sewingName, date, present, absent) {
 }
 
 // thêm sản phẩm vào
-async function getPresentThachServices(sewingName, date) {
+async function getPresentThachServices() {
   return new Promise(async (resolve, reject) => {
     try {
-      const data = await getPresentThach(sewingName, date);
+      const data = await getPresentThach();
 
       resolve(data);
     } catch (error) {
@@ -163,21 +171,40 @@ async function getPresentThachServices(sewingName, date) {
   });
 }
 
-// thêm sản phẩm vào
+// Service
 async function getStyleThachServices(styleHat) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let data = await getStyleThach();
+  try {
+    const accessToken = await getAccessToken();
+    const data = await getStyleThach();
 
-      data = data.filter((els) => els[0] == styleHat);
+    const matched = data?.filter((els) => els[0] == styleHat);
+    if (!matched?.length) return null;
 
-      data = { imageLink: data[0][1] };
+    const imageLink = matched[0][1];
+    if (!imageLink) return null;
 
-      resolve(data);
-    } catch (error) {
-      reject(error);
+    const fileIdMatch = imageLink.match(/\/d\/([^/]+)\//);
+    if (!fileIdMatch) {
+      console.error('Không lấy được fileId từ URL:', imageLink);
+      return null;
     }
-  });
+    const fileId = fileIdMatch[1];
+
+    const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
+
+    const response = await axios.get(url, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      responseType: 'arraybuffer',
+    });
+
+    return {
+      data: response.data,
+      mimeType: response.headers['content-type'] || 'image/png',
+    };
+  } catch (error) {
+    console.error('Lỗi khi fetch ảnh:', error?.response?.data || error.message);
+    return null;
+  }
 }
 
 // thêm target
@@ -293,6 +320,96 @@ async function postManPSCSALARYServices(day, month, sewingNameMan, productName, 
   }
 }
 
+// thêm VÀO PCS SALARY MẪN
+async function uploadServices(filePath) {
+  return cloudinary.uploader.upload(filePath, {
+    folder: 'uploads',
+  });
+}
+
+// lấy tất cả danh về lỗi và top
+async function getFailureServices(sewingNameProps, dateProps) {
+  try {
+    const [response1, response2] = await Promise.all([getFailureThach(), getFailureImageThach()]);
+
+    const data1 = response1
+      .filter(([sewingName, , , date]) => sewingName == sewingNameProps && date == dateProps)
+      .map(([sewingName, productName, timeLine, date, quatity, name_failure, level]) => ({
+        sewingName,
+        productName,
+        timeLine,
+        date,
+        quatity,
+        name_failure,
+        level,
+      }));
+
+    const data2_start = response2.filter(([sewingName, , , date]) => sewingName == sewingNameProps && date == dateProps).pop();
+
+    const data2_last = data2_start
+      ? {
+          sewingName: data2_start[0],
+          productName: data2_start[1],
+          timeLine: data2_start[2],
+          date: data2_start[3],
+          name_failure1: data2_start[4],
+          url_failure1: data2_start[5],
+          name_failure2: data2_start[6],
+          url_failure2: data2_start[7],
+          name_failure3: data2_start[8],
+          url_failure3: data2_start[9],
+        }
+      : null;
+
+    const a = data1.filter((els) => els.timeLine == data2_last.timeLine);
+
+    let data2 = a.filter((els) => els.name_failure == data2_last.name_failure1 || els.name_failure == data2_last.name_failure2 || els.name_failure == data2_last.name_failure3);
+    data2 = data2.sort((a, b) => b.quatity - a.quatity);
+
+    data2.forEach((els, index) => {
+      data2_last[`quatity_failure${index + 1}`] = els.quatity;
+    });
+
+    return { data1, data2: data2_last };
+  } catch (error) {
+    throw error;
+  }
+}
+
+// thêm VÀO PCS SALARY MẪN
+async function postFailureNumberServices(bodyData) {
+  try {
+    const { sewingName, productName, timeLine, date, arrayLists, arrayImages } = bodyData;
+
+    let dataRequest = [];
+    for (const arrayList of arrayLists) {
+      let dataRequest = [sewingName, productName, timeLine, date, arrayList.quatity, arrayList.name_link, arrayList.level];
+      await appendFailureThach(dataRequest);
+    }
+    // const promises = arrayLists.map(({ quatity, name_link, level }) => appendFailureThach([sewingName, productName, timeLine, date, quatity, name_link, level]));
+    // await Promise.all(promises);
+
+    dataRequest = [
+      sewingName,
+      productName,
+      timeLine,
+      date,
+      arrayImages.name_link1,
+      arrayImages.img_link1,
+      arrayImages.name_link2,
+      arrayImages.img_link2,
+      arrayImages.name_link3,
+      arrayImages.img_link3,
+    ];
+    await appendFailureImageThach(dataRequest);
+
+    return [];
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 module.exports = {
   getLoginThachServices,
   getPresentThachServices,
@@ -306,4 +423,7 @@ module.exports = {
   getTargetThachServices,
   thachGetTargetServices,
   postManPSCSALARYServices,
+  uploadServices,
+  getFailureServices,
+  postFailureNumberServices,
 };

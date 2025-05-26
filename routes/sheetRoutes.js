@@ -30,12 +30,16 @@ const {
   thachGetTargetController,
   getLoginThachController,
   thachtestController,
+  uploadController,
+  getFailureController,
+  postFailureNumberController,
 } = require('../controllers/thach/index');
-
+const multer = require('multer');
 const limiter = require('../middlewares/rateLimit');
 const { getAllTimekeepingControllers, insertTimekeepingControllers } = require('../controllers/timekeeping');
 
 const router = express.Router();
+const upload = multer({ dest: 'uploads/' });
 
 router.get('/', (req, res) => {
   return res.json('ok');
@@ -100,5 +104,9 @@ router.post('/thach/post-target-day-line', thachPostTargetController);
 router.get('/thach/get-target-day-line', thachGetTargetController);
 
 router.get('/thach/test-getrange', thachtestController);
+
+router.post('/thach/upload-image', upload.single('image'), uploadController);
+router.post('/thach/post-failure-number', postFailureNumberController);
+router.post('/thach/get-failure', getFailureController);
 
 module.exports = router;
