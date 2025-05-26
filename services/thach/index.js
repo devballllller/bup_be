@@ -120,7 +120,7 @@ async function appendProductThachServices(sewingName, productName, date, timeLin
       await appendProductThach(rowData);
       const diff = Math.abs(Number(sumAccept) + Number(productAccept));
 
-      await postManPSCSALARYServices(day, month, sewingNameMan, productName, diff);
+      // await postManPSCSALARYServices(day, month, sewingNameMan, productName, diff);
     }
     // ngược lại là cập nhật
     else {
@@ -133,7 +133,7 @@ async function appendProductThachServices(sewingName, productName, date, timeLin
       const diff = Math.abs(Number(sumAccept) - Number(prevAccept) + Number(productAccept));
       const range = `THACH!A${rowIndex + 2}`;
       await insertProductThach(rowData, range);
-      await postManPSCSALARYServices(day, month, sewingNameMan, productName, diff);
+      // await postManPSCSALARYServices(day, month, sewingNameMan, productName, diff);
     }
 
     return {
@@ -311,7 +311,7 @@ async function postManPSCSALARYServices(day, month, sewingNameMan, productName, 
       const colLetter = numberToColumnLetter(columnIndex);
       const range = `${month}${enumManPCSSALARY.PARTNAME}${colLetter}${rowIndex + 7}`;
 
-      await insertTotalManThach([productAccept], range);
+      // await insertTotalManThach([productAccept], range);
     }
 
     return [];
