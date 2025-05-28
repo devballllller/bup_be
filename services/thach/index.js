@@ -332,6 +332,27 @@ async function getFailureServices(sewingNameProps, dateProps) {
   try {
     const [response1, response2] = await Promise.all([getFailureThach(), getFailureImageThach()]);
 
+    // get image trước
+    const data2_start_v1 = response2.filter(([sewingName, , , date]) => sewingName == sewingNameProps && date == dateProps);
+
+    const data2_last_v1 =
+      data2_start_v1.length > 0
+        ? data2_start_v1.map((els) => ({
+            sewingName: els[0],
+            productName: els[1],
+            timeLine: els[2],
+            date: els[3],
+            name_failure1: els[4],
+            url_failure1: els[5],
+            name_failure2: els[6],
+            url_failure2: els[7],
+            name_failure3: els[8],
+            url_failure3: els[9],
+          }))
+        : null;
+
+    // lọc dữ liệu từ response1 tức là các lỗi nặng nhe
+    // sau đó rãi top lỗi vào data1
     const data1 = response1
       .filter(([sewingName, , , date]) => sewingName == sewingNameProps && date == dateProps)
       .map(([sewingName, productName, timeLine, date, quatity, name_failure, level]) => ({
@@ -344,8 +365,37 @@ async function getFailureServices(sewingNameProps, dateProps) {
         level,
       }));
 
-    const data2_start = response2.filter(([sewingName, , , date]) => sewingName == sewingNameProps && date == dateProps).pop();
+    // tạo 1 cái map
+    const myMap = new Map();
 
+    let index = 0;
+
+    data1.forEach((els) => {
+      if (myMap.has(els.timeLine)) {
+        if (els.level == 'Nặng') {
+          myMap.get(els.timeLine).failureHuge += Number(els.quatity);
+        } else {
+          myMap.get(els.timeLine).failureSmall += Number(els.quatity);
+        }
+      } else {
+        myMap.set(els.timeLine, {
+          ...els,
+          failureHuge: els.level == 'Nặng' ? Number(els.quatity) : 0,
+          failureSmall: els.level == 'Nhẹ' ? Number(els.quatity) : 0,
+          name_failure_array: {
+            name_failure1: data2_last_v1[index]?.name_failure1,
+            name_failure2: data2_last_v1[index]?.name_failure2,
+            name_failure3: data2_last_v1[index]?.name_failure3,
+          },
+        });
+        index++;
+      }
+    });
+
+    const myMapConverrt = Array.from(myMap.values());
+
+    // lọia 2
+    const data2_start = data2_start_v1.pop();
     const data2_last = data2_start
       ? {
           sewingName: data2_start[0],
@@ -370,7 +420,7 @@ async function getFailureServices(sewingNameProps, dateProps) {
       data2_last[`quatity_failure${index + 1}`] = els.quatity;
     });
 
-    return { data1, data2: data2_last };
+    return { data1: myMapConverrt, data2: data2_last };
   } catch (error) {
     throw error;
   }
