@@ -119,8 +119,8 @@ async function appendProductThachServices(sewingName, productName, date, timeLin
 
       await appendProductThach(rowData);
       const diff = Math.abs(Number(sumAccept) + Number(productAccept));
-
-      // await postManPSCSALARYServices(day, month, sewingNameMan, productName, diff);
+      console.log('first');
+      await postManPSCSALARYServices(day, month, sewingNameMan, productName, diff);
     }
     // ngược lại là cập nhật
     else {
@@ -133,7 +133,9 @@ async function appendProductThachServices(sewingName, productName, date, timeLin
       const diff = Math.abs(Number(sumAccept) - Number(prevAccept) + Number(productAccept));
       const range = `THACH!A${rowIndex + 2}`;
       await insertProductThach(rowData, range);
-      // await postManPSCSALARYServices(day, month, sewingNameMan, productName, diff);
+      console.log('second');
+
+      await postManPSCSALARYServices(day, month, sewingNameMan, productName, diff);
     }
 
     return {
@@ -297,6 +299,7 @@ function numberToColumnLetter(n) {
 // thêm VÀO PCS SALARY MẪN
 async function postManPSCSALARYServices(day, month, sewingNameMan, productName, productAccept) {
   try {
+    console.log(`${month}${enumManPCSSALARY.NAMESHEET}`);
     const response = await getTotalManThach(`${month}${enumManPCSSALARY.NAMESHEET}`);
 
     const columnIndex = response[0].indexOf(day);
@@ -307,11 +310,13 @@ async function postManPSCSALARYServices(day, month, sewingNameMan, productName, 
       sewingNameMan === 'Baller 1' || sewingNameMan === 'Baller 2' ? row[0] === sewingNameMan : row[0] === sewingNameMan && row[2] === productNameSplit,
     );
 
+    console.log(columnIndex, rowIndex);
     if (columnIndex !== -1 && rowIndex !== -1) {
       const colLetter = numberToColumnLetter(columnIndex);
       const range = `${month}${enumManPCSSALARY.PARTNAME}${colLetter}${rowIndex + 7}`;
 
-      // await insertTotalManThach([productAccept], range);
+      console.log(range);
+      await insertTotalManThach([productAccept], range);
     }
 
     return [];
@@ -420,6 +425,7 @@ async function getFailureServices(sewingNameProps, dateProps) {
       data2_last[`quatity_failure${index + 1}`] = els.quatity;
     });
 
+    console.log(myMapConverrt, data2_last);
     return { data1: myMapConverrt, data2: data2_last };
   } catch (error) {
     throw error;
