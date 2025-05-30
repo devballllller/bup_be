@@ -1,9 +1,0 @@
-router.post('/auth-login', loginController); => phone, password
-
-// -----------------------=> find
-router.post('/find-rest', findEmployeeRestController); => name
-router.post('/find-salary', limiter, findEmployeeSalaryController); => phone
-
-// -----------------------=> send
-router.post('/get-send-request', getSendRequestController); => name, employeeId
-

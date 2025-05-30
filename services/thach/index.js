@@ -332,102 +332,86 @@ async function uploadServices(filePath) {
   });
 }
 
-// lấy tất cả danh về lỗi và top
-async function getFailureServices(sewingNameProps, dateProps) {
+async function getFailureServices(sewingName, date) {
   try {
-    const [response1, response2] = await Promise.all([getFailureThach(), getFailureImageThach()]);
+    const [failures, failureImages] = await Promise.all([getFailureThach(), getFailureImageThach()]);
 
-    // get image trước
-    const data2_start_v1 = response2.filter(([sewingName, , , date]) => sewingName == sewingNameProps && date == dateProps);
-
-    const data2_last_v1 =
-      data2_start_v1.length > 0
-        ? data2_start_v1.map((els) => ({
-            sewingName: els[0],
-            productName: els[1],
-            timeLine: els[2],
-            date: els[3],
-            name_failure1: els[4],
-            url_failure1: els[5],
-            name_failure2: els[6],
-            url_failure2: els[7],
-            name_failure3: els[8],
-            url_failure3: els[9],
-          }))
-        : null;
-
-    // lọc dữ liệu từ response1 tức là các lỗi nặng nhe
-    // sau đó rãi top lỗi vào data1
-    const data1 = response1
-      .filter(([sewingName, , , date]) => sewingName == sewingNameProps && date == dateProps)
-      .map(([sewingName, productName, timeLine, date, quatity, name_failure, level]) => ({
-        sewingName,
+    const filteredFailures = failures
+      .filter(([sName, , , fDate]) => sName === sewingName && fDate === date)
+      .map(([sName, productName, timeLine, fDate, quantity, name_failure, level]) => ({
+        sewingName: sName,
         productName,
         timeLine,
-        date,
-        quatity,
+        date: fDate,
+        quantity: Number(quantity),
         name_failure,
         level,
       }));
 
-    // tạo 1 cái map
-    const myMap = new Map();
+    const filteredFailureImages = failureImages
+      .filter(([sName, , , fDate]) => sName === sewingName && fDate === date)
+      .map(([sName, productName, timeLine, fDate, nf1, url1, nf2, url2, nf3, url3]) => ({
+        sewingName: sName,
+        productName,
+        timeLine,
+        date: fDate,
+        name_failure1: nf1,
+        url_failure1: url1,
+        name_failure2: nf2,
+        url_failure2: url2,
+        name_failure3: nf3,
+        url_failure3: url3,
+      }));
 
-    let index = 0;
+    // Map timeline -> tổng hợp lỗi nặng/nhẹ và hình ảnh
+    const summaryMap = new Map();
 
-    data1.forEach((els) => {
-      if (myMap.has(els.timeLine)) {
-        if (els.level == 'Nặng') {
-          myMap.get(els.timeLine).failureHuge += Number(els.quatity);
-        } else {
-          myMap.get(els.timeLine).failureSmall += Number(els.quatity);
+    for (const fail of filteredFailures) {
+      const current = summaryMap.get(fail.timeLine) || {
+        ...fail,
+        failureHuge: 0,
+        failureSmall: 0,
+        name_failure_array: {},
+      };
+
+      if (fail.level === 'Nặng') current.failureHuge += fail.quantity;
+      else current.failureSmall += fail.quantity;
+
+      // Gán hình ảnh tương ứng nếu chưa có
+      if (!current.name_failure_array.name_failure1) {
+        const imageEntry = filteredFailureImages.find((img) => img.timeLine === fail.timeLine);
+        if (imageEntry) {
+          current.name_failure_array = {
+            name_failure1: imageEntry.name_failure1,
+            name_failure2: imageEntry.name_failure2,
+            name_failure3: imageEntry.name_failure3,
+          };
         }
-      } else {
-        myMap.set(els.timeLine, {
-          ...els,
-          failureHuge: els.level == 'Nặng' ? Number(els.quatity) : 0,
-          failureSmall: els.level == 'Nhẹ' ? Number(els.quatity) : 0,
-          name_failure_array: {
-            name_failure1: data2_last_v1[index]?.name_failure1,
-            name_failure2: data2_last_v1[index]?.name_failure2,
-            name_failure3: data2_last_v1[index]?.name_failure3,
-          },
-        });
-        index++;
       }
+
+      summaryMap.set(fail.timeLine, current);
+    }
+
+    const data1 = Array.from(summaryMap.values());
+
+    // Phân tích top lỗi của timeline cuối
+    const lastTimelineImage = filteredFailureImages[filteredFailureImages.length - 1];
+    const topFailures = filteredFailures
+      .filter((f) => f.timeLine === lastTimelineImage?.timeLine)
+      .filter((f) => [lastTimelineImage?.name_failure1, lastTimelineImage?.name_failure2, lastTimelineImage?.name_failure3].includes(f.name_failure))
+      .sort((a, b) => b.quantity - a.quantity);
+
+    const data2 = {
+      ...lastTimelineImage,
+    };
+
+    topFailures.forEach((item, index) => {
+      data2[`quatity_failure${index + 1}`] = item.quantity;
     });
 
-    const myMapConverrt = Array.from(myMap.values());
-
-    // lọia 2
-    const data2_start = data2_start_v1.pop();
-    const data2_last = data2_start
-      ? {
-          sewingName: data2_start[0],
-          productName: data2_start[1],
-          timeLine: data2_start[2],
-          date: data2_start[3],
-          name_failure1: data2_start[4],
-          url_failure1: data2_start[5],
-          name_failure2: data2_start[6],
-          url_failure2: data2_start[7],
-          name_failure3: data2_start[8],
-          url_failure3: data2_start[9],
-        }
-      : null;
-
-    const a = data1.filter((els) => els.timeLine == data2_last.timeLine);
-
-    let data2 = a.filter((els) => els.name_failure == data2_last.name_failure1 || els.name_failure == data2_last.name_failure2 || els.name_failure == data2_last.name_failure3);
-    data2 = data2.sort((a, b) => b.quatity - a.quatity);
-
-    data2.forEach((els, index) => {
-      data2_last[`quatity_failure${index + 1}`] = els.quatity;
-    });
-
-    console.log(myMapConverrt, data2_last);
-    return { data1: myMapConverrt, data2: data2_last };
+    return { data1, data2 };
   } catch (error) {
+    console.error('Error in getFailureServices:', error);
     throw error;
   }
 }
