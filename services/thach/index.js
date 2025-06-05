@@ -94,15 +94,25 @@ async function getfilterProductNameThachServices(sewingName) {
 }
 
 // thêm sản phẩm vào
-async function appendProductThachServices(sewingName, productName, date, timeLine, productReceive, productAccept, productFails, dayTarget, timeStampValue, sewingNameMan) {
+async function appendProductThachServices({
+  sewingName,
+  productName,
+  date,
+  timeLine,
+  productReceive,
+  productAccept,
+  productFails,
+  dayTarget,
+  timeStampValue,
+  sewingNameMan,
+  actualValue,
+}) {
   try {
     // 1. Lấy tất cả các sản lượng
     const allDataProduct = await getAllProductThach();
     // tìm dòng: theo tên - theo ngày - theo line
     const rowIndex = allDataProduct.findIndex((row) => row[0] === sewingName && row[3] === date && row[4] === timeLine);
-
     // giá trị mong đợi và dữ liệu insert
-    const actualValue = Math.round(Number(dayTarget) / 8);
     const rowData = [sewingName, productName, dayTarget, date, timeLine, actualValue, productReceive, productAccept, productFails, timeStampValue, sewingNameMan];
 
     // format ngày
@@ -310,7 +320,6 @@ async function postManPSCSALARYServices(day, month, sewingNameMan, productName, 
       sewingNameMan === 'Baller 1' || sewingNameMan === 'Baller 2' ? row[0] === sewingNameMan : row[0] === sewingNameMan && row[2] === productNameSplit,
     );
 
-    console.log(columnIndex, rowIndex);
     if (columnIndex !== -1 && rowIndex !== -1) {
       const colLetter = numberToColumnLetter(columnIndex);
       const range = `${month}${enumManPCSSALARY.PARTNAME}${colLetter}${rowIndex + 7}`;
@@ -398,8 +407,8 @@ async function getFailureServices(sewingName, date) {
     const lastTimelineImage = filteredFailureImages[filteredFailureImages.length - 1];
     const topFailures = filteredFailures
       .filter((f) => f.timeLine === lastTimelineImage?.timeLine)
-      .filter((f) => [lastTimelineImage?.name_failure1, lastTimelineImage?.name_failure2, lastTimelineImage?.name_failure3].includes(f.name_failure))
-      .sort((a, b) => b.quantity - a.quantity);
+      .filter((f) => [lastTimelineImage?.name_failure1, lastTimelineImage?.name_failure2, lastTimelineImage?.name_failure3].includes(f.name_failure));
+    // .sort((a, b) => b.quantity - a.quantity);
 
     const data2 = {
       ...lastTimelineImage,

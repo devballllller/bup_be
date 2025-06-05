@@ -17,6 +17,7 @@ const {
   getFailureServices,
   postFailureNumberServices,
 } = require('../../services/thach/index');
+const ClientManager = require('../../config/websocket/clientManager');
 
 // đăng nhập
 async function getLoginThachController(req, res) {
@@ -68,8 +69,19 @@ async function thachPostProductController(req, res) {
   try {
     const timeStampValue = new Date().toLocaleString();
     const dayTarget = await getTargetThachServices(sewingName, date);
+    const actualValue = Math.round(Number(dayTarget) / 8);
 
-    const rows = await appendProductThachServices(sewingName, productName, date, timeLine, productReceive, productAccept, productFails, dayTarget, timeStampValue, sewingNameMan);
+    const bodyData = { sewingName, productName, date, timeLine, productReceive, productAccept, productFails, dayTarget, timeStampValue, sewingNameMan, actualValue };
+
+    const rows = await appendProductThachServices(bodyData);
+
+    //call websocket
+    const rowData = { sewingName, productName, dayTarget, date, timeLine, actualValue, productReceive, productAccept, productFails, timeStampValue, sewingNameMan };
+
+    ClientManager.sendToClient(sewingName, {
+      type: 'notification',
+      rowData,
+    });
 
     if (rows) {
       res.status(200).json({
