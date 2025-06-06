@@ -17,6 +17,9 @@ const {
   getFailureServices,
   postFailureNumberServices,
 } = require('../../services/thach/index');
+
+const { appendFailureThach, appendFailureImageThach } = require('../../services/configService');
+
 const ClientManager = require('../../config/websocket/clientManager');
 
 // đăng nhập
@@ -82,6 +85,12 @@ async function thachPostProductController(req, res) {
       type: 'notification',
       rowData,
     });
+
+    if (productFails == 0) {
+      const bodyData = { sewingName, productName, timeLine, date };
+      await appendFailureThach(bodyData);
+      await appendFailureImageThach(bodyData);
+    }
 
     if (rows) {
       res.status(200).json({

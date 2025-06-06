@@ -9,7 +9,6 @@ class WebSocketManager {
 
     this.wss.on('connection', (ws, req) => {
       const sewingName = new URL(req.url, `http://${req.headers.host}`).searchParams.get('sewingName');
-      console.log('New connection established for sewingName:', sewingName);
       if (sewingName) {
         ClientManager.addClient(sewingName, ws);
         ws.on('message', (message) => {
