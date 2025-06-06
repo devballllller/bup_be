@@ -87,7 +87,7 @@ async function thachPostProductController(req, res) {
     });
 
     if (productFails == 0) {
-      const bodyData = { sewingName, productName, timeLine, date };
+      const bodyData = [sewingName, productName, timeLine, date];
       await appendFailureThach(bodyData);
       await appendFailureImageThach(bodyData);
     }
