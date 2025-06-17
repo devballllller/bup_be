@@ -68,9 +68,9 @@ async function getfilterProductThachServices(sewingName, date, sewingNameStd) {
 
       // lấy wip summary
       const index_row = rowww[0].findIndex((els) => els === 'WIP');
-
+      console.log(sewingName, date, sewingNameStd);
       const summary_wip = rowww.flatMap((row) => {
-        if (row[0].toString().toLowerCase() === sewingNameStd.toString().toLowerCase()) {
+        if (row[0]?.toString().toLowerCase() === sewingNameStd?.toString().toLowerCase()) {
           return { name: row[index_row] };
         }
         return [];
@@ -112,6 +112,7 @@ async function getfilterProductThachServices(sewingName, date, sewingNameStd) {
       const df = total_recive_month / total_failure_month;
 
       const targetMonth = date.split('-')[1];
+
       const uniqueDates = new Set(rows.map((els) => els[locationCell.DATE]).filter((d) => d && d.split('-')[1] === targetMonth));
 
       resolve({ data, summary_wip, data_map_rowwwww, process1: (total_product_month / uniqueDates.size).toFixed(2), process2: df.toFixed(2) });
