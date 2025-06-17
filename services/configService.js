@@ -265,6 +265,15 @@ async function appendFailureImageThach(data) {
   return await appendData('THACH_FAILURE_TOP', data);
 }
 
+// wwip
+async function get_WIP_Sumary_Thach(data) {
+  return await getSheetData('THACH_WIP_SUMMARY', data);
+}
+
+async function get_WIP_Sumary_LINE_Thach(data) {
+  return await getSheetData('THACH_WIP_SUMMARY_LINE', data);
+}
+
 module.exports = {
   insertTimekeeping,
   allTimekeeping,
@@ -308,4 +317,6 @@ module.exports = {
   insertUNFBI,
   getAllDVEBI,
   insertDVEBI,
+  get_WIP_Sumary_Thach,
+  get_WIP_Sumary_LINE_Thach,
 };

@@ -179,9 +179,9 @@ async function getfilterProductNameThachController(req, res) {
 }
 
 async function thachGetFilterProductController(req, res) {
-  const { sewingName, date } = req.body;
+  const { sewingName, date, sewingNameStd } = req.body;
   try {
-    const data = await getfilterProductThachServices(sewingName, date);
+    const data = await getfilterProductThachServices(sewingName, date, sewingNameStd);
 
     if (data) {
       res.status(200).json({

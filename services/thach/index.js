@@ -9,7 +9,6 @@ const {
   getPresentThach,
   getStyleThach,
   insertProductThach,
-  getAllProductThachBao,
   getAuthThach,
   getTargetThach,
   appendTargetThach,
@@ -19,6 +18,8 @@ const {
   appendFailureThach,
   appendFailureImageThach,
   getFailureImageThach,
+  get_WIP_Sumary_Thach,
+  get_WIP_Sumary_LINE_Thach,
 } = require('../configService');
 const { locationCell } = require('../../config/thach/locationCell');
 const { enumTarget, enumManPCSSALARY } = require('../../constants/enumValue');
@@ -60,15 +61,60 @@ async function getAllProductThachServices() {
 }
 
 // lấy tất cả các sản phẩm lọc theo chuyền lọc theo ngày
-async function getfilterProductThachServices(sewingName, date) {
+async function getfilterProductThachServices(sewingName, date, sewingNameStd) {
   return new Promise(async (resolve, reject) => {
     try {
-      const rows = await getAllProductThach();
+      const [rows, rowww, rowwwww] = await Promise.all([getAllProductThach(), get_WIP_Sumary_Thach(), get_WIP_Sumary_LINE_Thach()]);
 
-      // const rows = await getAllProductThachBao();
+      // lấy wip summary
+      const index_row = rowww[0].findIndex((els) => els === 'WIP');
+
+      const summary_wip = rowww.flatMap((row) => {
+        if (row[0].toString().toLowerCase() === sewingNameStd.toString().toLowerCase()) {
+          return { name: row[index_row] };
+        }
+        return [];
+      });
+
+      //lấy top 5 wip theo chuyền
+      const data_map_rowwwww = rowwwww
+        .flatMap((els) => {
+          if (els[0]?.toString().toLowerCase() === sewingNameStd?.toString().toLowerCase()) {
+            return {
+              name: els[1]?.split('-')[0],
+              quantity: els[index_row - 1],
+            };
+          }
+          return [];
+        })
+        .sort((a, b) => b.quantity - a.quantity)
+        .slice(0, 5);
+
+      // lấy danh sách sản lượg trong ngày
       const data = rows.filter((row) => row[locationCell.SEWING_NAME] == sewingName && row[locationCell.DATE] == date);
 
-      resolve(data);
+      // lấy số tổng số lượng đã làm theo chuyền
+      const data_month = rows.filter((row) => row[locationCell.SEWING_NAME] == sewingName);
+      const { total_product_month, total_recive_month, total_failure_month } = data_month.reduce(
+        (acc, cur) => {
+          acc.total_product_month += Number(cur[locationCell.PRODUCT_ACCEPT]);
+          acc.total_recive_month += Number(cur[locationCell.PRODUCT_RECIEVE]);
+          acc.total_failure_month += Number(cur[locationCell.PRODUCT_FAILS]);
+          return acc;
+        },
+        {
+          total_product_month: 0,
+          total_recive_month: 0,
+          total_failure_month: 0,
+        },
+      );
+
+      const df = total_recive_month / total_failure_month;
+
+      const targetMonth = date.split('-')[1];
+      const uniqueDates = new Set(rows.map((els) => els[locationCell.DATE]).filter((d) => d && d.split('-')[1] === targetMonth));
+
+      resolve({ data, summary_wip, data_map_rowwwww, process1: (total_product_month / uniqueDates.size).toFixed(2), process2: df.toFixed(2) });
     } catch (error) {
       reject(error);
     }
@@ -113,7 +159,19 @@ async function appendProductThachServices({
     // tìm dòng: theo tên - theo ngày - theo line
     const rowIndex = allDataProduct.findIndex((row) => row[0] === sewingName && row[3] === date && row[4] === timeLine);
     // giá trị mong đợi và dữ liệu insert
-    const rowData = [sewingName, productName, dayTarget, date, timeLine, actualValue, productReceive, productAccept, productFails, timeStampValue, sewingNameMan];
+    const rowData = [
+      sewingName,
+      productName,
+      Number(dayTarget),
+      date,
+      timeLine,
+      Number(actualValue),
+      Number(productReceive),
+      Number(productAccept),
+      Number(productFails),
+      timeStampValue,
+      sewingNameMan,
+    ];
 
     // format ngày
     const [year, month, day] = date.split('-');
@@ -129,7 +187,7 @@ async function appendProductThachServices({
 
       await appendProductThach(rowData);
       const diff = Math.abs(Number(sumAccept) + Number(productAccept));
-      console.log('first');
+
       await postManPSCSALARYServices(day, month, sewingNameMan, productName, diff);
     }
     // ngược lại là cập nhật
@@ -143,7 +201,6 @@ async function appendProductThachServices({
       const diff = Math.abs(Number(sumAccept) - Number(prevAccept) + Number(productAccept));
       const range = `THACH!A${rowIndex + 2}`;
       await insertProductThach(rowData, range);
-      console.log('second');
 
       await postManPSCSALARYServices(day, month, sewingNameMan, productName, diff);
     }
@@ -309,7 +366,6 @@ function numberToColumnLetter(n) {
 // thêm VÀO PCS SALARY MẪN
 async function postManPSCSALARYServices(day, month, sewingNameMan, productName, productAccept) {
   try {
-    console.log(`${month}${enumManPCSSALARY.NAMESHEET}`);
     const response = await getTotalManThach(`${month}${enumManPCSSALARY.NAMESHEET}`);
 
     const columnIndex = response[0].indexOf(day);
@@ -324,7 +380,6 @@ async function postManPSCSALARYServices(day, month, sewingNameMan, productName, 
       const colLetter = numberToColumnLetter(columnIndex);
       const range = `${month}${enumManPCSSALARY.PARTNAME}${colLetter}${rowIndex + 7}`;
 
-      console.log(range);
       await insertTotalManThach([productAccept], range);
     }
 
