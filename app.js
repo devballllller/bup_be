@@ -42,4 +42,8 @@ app.get("/", (req, res) => {
   res.send("Server is running on Vercel 🚀");
 });
 
-module.exports = app;
+// module.exports = app;
+
+module.exports = (req, res) => {
+  return app(req, res);
+};
