@@ -34,16 +34,55 @@ const {
   getFailureController,
   postFailureNumberController,
 } = require('../controllers/thach/index');
-const multer = require('multer');
-const limiter = require('../middlewares/rateLimit');
+// const multer = require('multer');
+// const limiter = require('../middlewares/rateLimit');
+// const { getAllTimekeepingControllers, insertTimekeepingControllers } = require('../controllers/timekeeping');
+
+// const router = express.Router();
+// const upload = multer({ dest: 'uploads/' }); 
+
+// router.get('/', (req, res) => {
+//   return res.json('ok');
+// });
+
 const { getAllTimekeepingControllers, insertTimekeepingControllers } = require('../controllers/timekeeping');
+const limiter = require('../middlewares/rateLimit');
+
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 const router = express.Router();
-const upload = multer({ dest: 'uploads/' });
 
+// Sửa multer để dùng /tmp (Vercel cho phép đọc/ghi ở đây)
+const uploadDir = '/tmp/uploads';
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage });
+
+// -----------------------=> test
 router.get('/', (req, res) => {
   return res.json('ok');
 });
+
+
+
+
+
+
+
+
 
 // -----------------------=> auth
 // router.post('/auth-login', limiter, loginController);
