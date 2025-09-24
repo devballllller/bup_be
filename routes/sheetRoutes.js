@@ -39,16 +39,13 @@ const limiter = require('../middlewares/rateLimit');
 const { getAllTimekeepingControllers, insertTimekeepingControllers } = require('../controllers/timekeeping');
 
 const router = express.Router();
-const upload = multer({ dest: 'uploads/' }); 
+// const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: '/tmp' });
+
 
 router.get('/', (req, res) => {
   return res.json('ok');
 });
-
-
-
-
-
 
 
 
