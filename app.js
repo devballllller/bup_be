@@ -37,4 +37,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api', sheetRoutes);
 
+// Thêm route gốc để test
+app.get("/", (req, res) => {
+  res.send("Server is running on Vercel 🚀");
+});
+
 module.exports = app;
